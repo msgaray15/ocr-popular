@@ -20,11 +20,11 @@ public class PostgreSQLConnectionPool {
 	public ConnectionPool getConnectionConfig() {
         // TODO: change these properties for yours
 		PostgresqlConnectionProperties pgProperties = new PostgresqlConnectionProperties();
-		pgProperties.setDatabase("postgres");
+		pgProperties.setDatabase("vehicle_recognition");
 		pgProperties.setHost("localhost");
 		pgProperties.setPort(5432);
 		pgProperties.setUsername("postgres");
-		pgProperties.setPassword("secret");
+		pgProperties.setPassword("postgres");
 		pgProperties.setSchema("public");
 
 		return buildConnectionConfiguration(pgProperties);

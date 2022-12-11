@@ -5,6 +5,7 @@ import co.com.elbaiven.model.rol.gateways.RolRepository;
 import co.com.elbaiven.rol.model.RolModel;
 import co.com.elbaiven.rol.repository.RolReactiveRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -27,6 +28,7 @@ public class RolAdapterImpl implements RolRepository {
     }
 
     public Mono<Rol> update(Long id, Rol rol) {
+        rol.setId(id);
         return (id > 0 && !notNullFields(rol)) ?
                 Mono.error(new Exception("Los campos no comple con los valores aceptados")):
                 rolReactiveRepository.save(toRolModel(rol))
