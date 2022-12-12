@@ -1,7 +1,7 @@
 import Alert from 'react-bootstrap/Alert';
 import danger from '../../assets/img/danger.jpg';
 import warning from '../../assets/img/warning.jpg';
-import success from '../../assets/img/warning.jpg';
+import success from '../../assets/img/success.jpg';
 
 function AuthenticateVehicle() {
   const message=[
@@ -23,11 +23,11 @@ function AuthenticateVehicle() {
         <div className="text-center mb-4" >
             <div className="card-body d-flex align-items-center justify-content-center" Style={'height:75vh'}>
                 <div>
-                    <img className="card-img " Style={'max-width:80px;margin:auto'} src={danger} />
+                    <img className="card-img " Style={'max-width:80px;margin:auto'} src={success} />
                  
                 </div>
-                  <Alert key="danger" variant="danger">
-                  The vehicle to enter does not belong to the campus!
+                  <Alert key="success" variant="success">
+                  The vehicle to enter if it belongs to the campus!
                 </Alert>
                 
             </div>
