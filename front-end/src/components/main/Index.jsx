@@ -3,6 +3,7 @@ import DailyReport from './dailyReport/DailyReport';
 import Historical from './historical/Historical';
 import Search from './search/Search';
 import RegisterVehicle from '../parcials/RegisterVehicle';
+import AuthenticateVehicle from '../parcials/AuthenticateVehicle';
 
 const Index = () => {
     return (
@@ -22,6 +23,9 @@ const Index = () => {
             </Tab>
             <Tab eventKey="registerVehicle" title="Register Vehicle" >
                 <RegisterVehicle/>
+            </Tab>
+            <Tab eventKey="authenticateVehicle" title="Authenticate Vehicle ">
+                <AuthenticateVehicle/>
             </Tab>
         </Tabs>
     );
