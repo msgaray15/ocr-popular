@@ -2,6 +2,7 @@ import {Tab, Tabs} from 'react-bootstrap';
 import DailyReport from './dailyReport/DailyReport';
 import Historical from './historical/Historical';
 import Search from './search/Search';
+import RegisterVehicle from '../parcials/RegisterVehicle';
 
 const Index = () => {
     return (
@@ -16,8 +17,11 @@ const Index = () => {
             <Tab eventKey="historical" title="Histórico">
                 <Historical/>
             </Tab>
-            <Tab eventKey="search" title="Busqueda" >
+            <Tab eventKey="search" title="Search" >
                 <Search/>
+            </Tab>
+            <Tab eventKey="registerVehicle" title="Register Vehicle" >
+                <RegisterVehicle/>
             </Tab>
         </Tabs>
     );
