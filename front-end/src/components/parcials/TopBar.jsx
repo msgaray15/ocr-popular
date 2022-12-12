@@ -2,15 +2,15 @@ import { Container, Navbar,Dropdown, DropdownButton } from 'react-bootstrap';
 
 const TopBar = () => {
     return (
-        <Navbar className="bg-success">
-            <Navbar.Brand className="ps-4 text-light"><h4>OCR-POPULAR</h4></Navbar.Brand>
+        <Navbar className="bg-success p-0">
+            <Navbar.Brand className="ps-4 text-light"><strong>OCR-POPULAR</strong></Navbar.Brand>
             <Navbar.Toggle />
             <Navbar.Collapse className="justify-content-end">
-                <Navbar.Text className="pe-4">
+                <Navbar.Text className="p-0 pe-4">
                     <DropdownButton
                         drop="start"
                         variant="success"
-                        title={<i class="fa-solid fa-user fa-xl"></i>}
+                        title={<i class="fa-solid fa-user fa-lg"></i>}
                     >
                         <Dropdown.Item eventKey="2">Perfil</Dropdown.Item>
                         <Dropdown.Item eventKey="3">Configuracion</Dropdown.Item>
