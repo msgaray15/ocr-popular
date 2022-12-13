@@ -1,31 +1,22 @@
-import {Tab, Tabs} from 'react-bootstrap';
-import DailyReport from './dailyReport/DailyReport';
-import Historical from './historical/Historical';
-import Search from './search/Search';
-import RegisterVehicle from '../parcials/RegisterVehicle';
-import AuthenticateVehicle from '../parcials/AuthenticateVehicle';
+import { Tab, Tabs } from 'react-bootstrap';
+import DailyReport from './indexTabs/dailyReport/DailyReport';
+import Historical from './indexTabs/historical/Historical';
+import Search from './indexTabs/search/Search';
 
 const Index = () => {
     return (
         <Tabs
             defaultActiveKey="dailyReport"
-            id="uncontrolled-tab-example"
             className="mb-3"
         >
             <Tab eventKey="dailyReport" title="Reporte Diario">
-                <DailyReport/>
+                <DailyReport />
             </Tab>
             <Tab eventKey="historical" title="Histórico">
-                <Historical/>
+                <Historical />
             </Tab>
             <Tab eventKey="search" title="Search" >
-                <Search/>
-            </Tab>
-            <Tab eventKey="registerVehicle" title="Register Vehicle" >
-                <RegisterVehicle/>
-            </Tab>
-            <Tab eventKey="authenticateVehicle" title="Authenticate Vehicle ">
-                <AuthenticateVehicle/>
+                <Search />
             </Tab>
         </Tabs>
     );

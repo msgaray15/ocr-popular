@@ -1,9 +1,7 @@
 import { Button, Form, FormControl, FormGroup} from "react-bootstrap";
-import '../../assets/css/index.css'
+import '../../../assets/css/index.css'
 
-const RegisterVehicle = () => {
-    
-
+const NewVehicle = () => {
     return (
         <div className="row m-3">
              
@@ -47,4 +45,4 @@ const RegisterVehicle = () => {
     );
 }
 
-export default RegisterVehicle;
+export default NewVehicle;

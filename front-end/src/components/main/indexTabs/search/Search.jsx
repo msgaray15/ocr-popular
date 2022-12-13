@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Form, Button } from 'react-bootstrap';
-import TableOCR from '../../parcials/TableOCR';
+import DynamicTable from '../../../parcials/DynamicTable';
 
 const Search = () => {
     const [dataPerson, setdataPerson] = useState({ name: "Abraham Sarabia Sereno", identification: 1234567890 });
@@ -40,7 +40,7 @@ const Search = () => {
             </div>
 
             <div className="col-md-8">
-                <TableOCR tableData={prueba} />
+                <DynamicTable tableData={prueba} />
             </div>
         </div>
     );

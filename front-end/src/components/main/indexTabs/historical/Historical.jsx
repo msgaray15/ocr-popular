@@ -1,9 +1,9 @@
-import Error from "../../Error";
+import NotFound from "../../../NotFound";
 
 
 const Historical = () => {
     return (
-        <Error/>
+        <NotFound/>
     );
 }
 

@@ -1,7 +1,7 @@
 import { Table } from 'react-bootstrap';
 import Loading from '../Loading';
 
-const TableOCR = ({ tableData }) => {
+const DynamicTable = ({ tableData }) => {
     console.log("tableData", tableData);
 
     if (tableData === undefined) return <Loading />
@@ -31,4 +31,4 @@ const TableOCR = ({ tableData }) => {
     );
 }
 
-export default TableOCR;
+export default DynamicTable;
