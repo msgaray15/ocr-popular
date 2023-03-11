@@ -5,7 +5,6 @@ import co.com.elbaiven.model.rol.gateways.RolRepository;
 import co.com.elbaiven.rol.model.RolModel;
 import co.com.elbaiven.rol.repository.RolReactiveRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;

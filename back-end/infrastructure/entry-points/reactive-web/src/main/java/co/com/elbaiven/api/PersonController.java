@@ -26,17 +26,17 @@ public class PersonController {
         return  personUseCase.read(id);
     }
 
-    @PostMapping("/create")
+    @PostMapping()
     public Mono<Person> create(@RequestBody Person person) {
         return  personUseCase.create(person);
     }
 
-    @PutMapping("{id}/edit")
+    @PutMapping("{id}")
     public Mono<Person> update(@PathVariable("id") Long id, @RequestBody Person person) {
         return  personUseCase.update(id,person);
     }
 
-    @DeleteMapping("delete/{id}")
+    @DeleteMapping("{id}")
     public Mono<Void> delete(@PathVariable("id") Long id) {
         return  personUseCase.delete(id);
     }

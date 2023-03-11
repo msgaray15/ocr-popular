@@ -27,17 +27,17 @@ public class ControlController {
         return  controlUseCase.read(id);
     }
 
-    @PostMapping("/create")
+    @PostMapping()
     public Mono<Control> create(@RequestBody Control control) {
         return  controlUseCase.create(control);
     }
 
-    @PutMapping("{id}/edit")
+    @PutMapping("{id}")
     public Mono<Control> update(@PathVariable("id") Long id, @RequestBody Control control) {
         return  controlUseCase.update(id,control);
     }
 
-    @DeleteMapping("delete/{id}")
+    @DeleteMapping("{id}")
     public Mono<Void> delete(@PathVariable("id") Long id) {
         return  controlUseCase.delete(id);
     }

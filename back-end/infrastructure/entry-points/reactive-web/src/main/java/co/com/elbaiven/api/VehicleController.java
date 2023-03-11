@@ -27,17 +27,17 @@ public class VehicleController {
         return  vehicleUseCase.read(id);
     }
 
-    @PostMapping("/create")
+    @PostMapping()
     public Mono<Vehicle> create(@RequestBody Vehicle vehicle) {
         return  vehicleUseCase.create(vehicle);
     }
 
-    @PutMapping("{id}/edit")
+    @PutMapping("{id}")
     public Mono<Vehicle> update(@PathVariable("id") Long id, @RequestBody Vehicle vehicle) {
         return  vehicleUseCase.update(id,vehicle);
     }
 
-    @DeleteMapping("delete/{id}")
+    @DeleteMapping("{id}")
     public Mono<Void> delete(@PathVariable("id") Long id) {
         return  vehicleUseCase.delete(id);
     }

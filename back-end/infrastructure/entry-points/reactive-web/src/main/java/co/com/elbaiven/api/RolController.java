@@ -25,17 +25,17 @@ public class RolController {
         return  rolUseCase.read(id);
     }
 
-    @PostMapping("/create")
+    @PostMapping()
     public Mono<Rol> create(@RequestBody Rol rol) {
         return  rolUseCase.create(rol);
     }
 
-    @PutMapping("{id}/edit")
+    @PutMapping("{id}")
     public Mono<Rol> update(@PathVariable("id") Long id, @RequestBody Rol rol) {
         return  rolUseCase.update(id,rol);
     }
 
-    @DeleteMapping("delete/{id}")
+    @DeleteMapping("{id}")
     public Mono<Void> delete(@PathVariable("id") Long id) {
         return  rolUseCase.delete(id);
     }

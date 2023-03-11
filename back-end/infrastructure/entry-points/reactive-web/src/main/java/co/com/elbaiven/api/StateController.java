@@ -27,17 +27,17 @@ public class StateController {
         return  stateUseCase.read(id);
     }
 
-    @PostMapping("/create")
+    @PostMapping()
     public Mono<State> create(@RequestBody State state) {
         return  stateUseCase.create(state);
     }
 
-    @PutMapping("{id}/edit")
+    @PutMapping("{id}")
     public Mono<State> update(@PathVariable("id") Long id, @RequestBody State state) {
         return  stateUseCase.update(id,state);
     }
 
-    @DeleteMapping("delete/{id}")
+    @DeleteMapping("{id}")
     public Mono<Void> delete(@PathVariable("id") Long id) {
         return  stateUseCase.delete(id);
     }

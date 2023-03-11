@@ -12,7 +12,7 @@ import reactor.core.publisher.Mono;
 
 @RestController
 @CrossOrigin(origins = "*",methods = {RequestMethod.POST,RequestMethod.GET,RequestMethod.DELETE,RequestMethod.PUT})
-@RequestMapping(value = "/api/typeuser", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/api/typeVehicle", produces = MediaType.APPLICATION_JSON_VALUE)
 @AllArgsConstructor
 public class TypeVehicleController {
     private final TypeVehicleUseCase typeVehicleUseCase;
@@ -27,17 +27,17 @@ public class TypeVehicleController {
         return  typeVehicleUseCase.read(id);
     }
 
-    @PostMapping("/create")
+    @PostMapping()
     public Mono<TypeVehicle> create(@RequestBody TypeVehicle typeVehicle) {
         return  typeVehicleUseCase.create(typeVehicle);
     }
 
-    @PutMapping("{id}/edit")
+    @PutMapping("{id}")
     public Mono<TypeVehicle> update(@PathVariable("id") Long id, @RequestBody TypeVehicle typeVehicle) {
         return  typeVehicleUseCase.update(id,typeVehicle);
     }
 
-    @DeleteMapping("delete/{id}")
+    @DeleteMapping("{id}")
     public Mono<Void> delete(@PathVariable("id") Long id) {
         return  typeVehicleUseCase.delete(id);
     }
