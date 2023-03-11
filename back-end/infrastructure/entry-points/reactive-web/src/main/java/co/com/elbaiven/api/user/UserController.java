@@ -1,8 +1,8 @@
-package co.com.elbaiven.api;
+package co.com.elbaiven.api.user;
 
-import co.com.elbaiven.model.person.Person;
+import co.com.elbaiven.api.user.inrq.LoginRq;
+import co.com.elbaiven.model.user.Login;
 import co.com.elbaiven.model.user.User;
-import co.com.elbaiven.usecase.person.PersonUseCase;
 import co.com.elbaiven.usecase.user.UserUseCase;
 import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;
@@ -40,5 +40,10 @@ public class UserController {
     @DeleteMapping("{id}")
     public Mono<Void> delete(@PathVariable("id") Long id) {
         return  userUseCase.delete(id);
+    }
+
+    @PostMapping("/login")
+    public Mono<Login> login (LoginRq login){
+        return userUseCase.login(login.getEmail(), login.getPassword());
     }
 }

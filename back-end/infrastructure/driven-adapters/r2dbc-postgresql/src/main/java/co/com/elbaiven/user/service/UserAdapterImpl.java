@@ -1,9 +1,19 @@
 package co.com.elbaiven.user.service;
 
+import co.com.elbaiven.adapter.JWTOperations;
 import co.com.elbaiven.model.person.Person;
 import co.com.elbaiven.model.person.gateways.PersonRepository;
+import co.com.elbaiven.model.rol.Rol;
+import co.com.elbaiven.model.user.Login;
 import co.com.elbaiven.model.user.User;
+import co.com.elbaiven.model.user.UserComplete;
 import co.com.elbaiven.model.user.gateways.UserRepository;
+import co.com.elbaiven.person.model.PersonModel;
+import co.com.elbaiven.person.repository.PersonReactiveRepository;
+import co.com.elbaiven.person.service.PersonAdapterImpl;
+import co.com.elbaiven.rol.model.RolModel;
+import co.com.elbaiven.rol.repository.RolReactiveRepository;
+import co.com.elbaiven.rol.service.RolAdapterImpl;
 import co.com.elbaiven.user.model.UserModel;
 import co.com.elbaiven.user.repository.UserReactiveRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +25,8 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class UserAdapterImpl implements UserRepository {
     private final UserReactiveRepository userReactiveRepository;
+    private  final PersonAdapterImpl personAdapterImpl;
+    private final RolAdapterImpl rolAdapterImpl;
 
     public Mono<User> create(User  user) {
         return !notNullFields(user) ?
@@ -26,6 +38,31 @@ public class UserAdapterImpl implements UserRepository {
     public Mono<User> read(Long id) {
         return userReactiveRepository.findById(id)
                 .map((e) ->toUser(e));
+    }
+
+    public Mono<Login> login(String email, String password) {
+
+        return userReactiveRepository.findByUserAndPassword(email,password)
+                .flatMap((e) ->{
+                    if(e == null) return null;
+                    Mono<Person> person = personAdapterImpl.read(e.getIdPerson());
+                    Mono<Rol> rol = rolAdapterImpl.read(e.getIdRol());
+                    return Mono.zip(person, rol)
+                            .map(tuple ->getLogin(e,tuple.getT1(),tuple.getT2()));
+                });
+    }
+
+    private Login getLogin(UserModel userModel, Person person, Rol rol){
+        return Login.builder()
+                .user(userModel.getUser())
+                .token(JWTOperations.getJWTToken(
+                        UserComplete.builder()
+                            .id(userModel.getId())
+                            .person(person)
+                            .rol(rol)
+                            .user(userModel.getUser())
+                            .build()))
+                .build();
     }
 
     public Mono<User> update(Long id, User user) {

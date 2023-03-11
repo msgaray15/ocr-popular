@@ -15,7 +15,7 @@ public class UserModel {
     @Id
     @Column("id")
     private Long id;
-    @Column("idPerson")
+    @Column("id_person")
     private Long idPerson;
     @Column("idRol")
     private Long idRol;

@@ -1,6 +1,8 @@
 package co.com.elbaiven.usecase.user;
 
+import co.com.elbaiven.model.user.Login;
 import co.com.elbaiven.model.user.User;
+import co.com.elbaiven.model.user.UserComplete;
 import co.com.elbaiven.model.user.gateways.UserRepository;
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Flux;
@@ -29,4 +31,8 @@ public class UserUseCase {
     public Flux<User> getAll(){
         return userRepository.getAll();
     }
+    public Mono<Login> login(String email, String password){
+        return userRepository.login(email,password);
+    }
+
 }

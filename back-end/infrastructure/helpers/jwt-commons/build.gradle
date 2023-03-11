@@ -1,0 +1,10 @@
+dependencies {
+    implementation project(':model')
+    implementation 'org.springframework:spring-context'
+    implementation 'org.springframework.security:spring-security-core:4.2.0.RELEASE'
+    implementation 'org.springframework.security:spring-security-config:3.2.0.RELEASE'
+    implementation 'org.springframework.security:spring-security-web:4.2.2.RELEASE'
+    implementation 'io.jsonwebtoken:jjwt:0.7.0'
+    //implementation 'eu.bitwalker:UserAgentUtils:1.14'
+    implementation 'javax.servlet:servlet-api:2.5'
+}
