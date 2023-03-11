@@ -19,7 +19,7 @@ public class JWTOperations {
         String token = Jwts
                 .builder()
                 .setId("asarabias")
-                .setSubject(usersComplete.getUser())
+                .setSubject(usersComplete.getEmail())
                 .claim("authorities",
                         grantedAuthorities.stream()
                                 .map(GrantedAuthority::getAuthority)

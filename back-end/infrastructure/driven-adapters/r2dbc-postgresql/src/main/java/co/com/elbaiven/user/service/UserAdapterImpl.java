@@ -42,7 +42,7 @@ public class UserAdapterImpl implements UserRepository {
 
     public Mono<Login> login(String email, String password) {
 
-        return userReactiveRepository.findByUserAndPassword(email,password)
+        return userReactiveRepository.findByEmailAndPassword(email,password)
                 .flatMap((e) ->{
                     if(e == null) return null;
                     Mono<Person> person = personAdapterImpl.read(e.getIdPerson());
