@@ -12,5 +12,5 @@ public class UserComplete {
     private Long id;
     private Person person;
     private Rol rol;
-    private  String user;
+    private  String email;
 }

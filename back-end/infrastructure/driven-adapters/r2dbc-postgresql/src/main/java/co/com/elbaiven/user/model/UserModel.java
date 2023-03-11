@@ -17,10 +17,10 @@ public class UserModel {
     private Long id;
     @Column("id_person")
     private Long idPerson;
-    @Column("idRol")
+    @Column("id_rol")
     private Long idRol;
-    @Column("user")
-    private  String user;
+    @Column("email")
+    private  String email;
     @Column("password")
     private  String password;
 }

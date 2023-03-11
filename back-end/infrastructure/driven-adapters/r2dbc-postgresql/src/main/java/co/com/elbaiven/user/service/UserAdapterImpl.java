@@ -54,13 +54,13 @@ public class UserAdapterImpl implements UserRepository {
 
     private Login getLogin(UserModel userModel, Person person, Rol rol){
         return Login.builder()
-                .user(userModel.getUser())
+                .user(userModel.getEmail())
                 .token(JWTOperations.getJWTToken(
                         UserComplete.builder()
                             .id(userModel.getId())
                             .person(person)
                             .rol(rol)
-                            .user(userModel.getUser())
+                            .email(userModel.getEmail())
                             .build()))
                 .build();
     }
@@ -88,7 +88,7 @@ public class UserAdapterImpl implements UserRepository {
                 user.getId(),
                 user.getIdPerson(),
                 user.getIdRol(),
-                user.getUser(),
+                user.getEmail(),
                 user.getPassword()
         );
     }
@@ -98,12 +98,12 @@ public class UserAdapterImpl implements UserRepository {
                 userModel.getId(),
                 userModel.getIdPerson(),
                 userModel.getIdRol(),
-                userModel.getUser(),
+                userModel.getEmail(),
                 userModel.getPassword()
         );
     }
 
     public static boolean notNullFields(User user) {
-        return (user.getIdPerson() > 0 && user.getIdRol() > 0 && user.getUser().length() > 0 && user.getPassword().length() > 0 );
+        return (user.getIdPerson() > 0 && user.getIdRol() > 0 && user.getEmail().length() > 0 && user.getPassword().length() > 0 );
     }
 }

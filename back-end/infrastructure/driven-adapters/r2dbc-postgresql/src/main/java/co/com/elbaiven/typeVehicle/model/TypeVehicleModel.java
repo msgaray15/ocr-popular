@@ -10,7 +10,7 @@ import org.springframework.data.relational.core.mapping.Table;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table("typeVehicle")
+@Table("type_vehicle")
 public class TypeVehicleModel {
     @Id
     @Column("id")

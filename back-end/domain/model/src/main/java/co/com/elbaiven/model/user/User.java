@@ -11,6 +11,6 @@ public class User {
     private Long id;
     private Long idPerson;
     private Long idRol;
-    private  String user;
+    private  String email;
     private  String password;
 }

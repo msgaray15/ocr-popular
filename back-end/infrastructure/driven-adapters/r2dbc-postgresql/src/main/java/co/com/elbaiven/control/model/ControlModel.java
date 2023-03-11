@@ -17,8 +17,8 @@ public class ControlModel {
     private Long id;
     @Column("date")
     private LocalDateTime date;
-    @Column("idState")
+    @Column("id_state")
     private Long idState;
-    @Column("idVehicle")
+    @Column("id_vehicle")
     private Long idVehicle;
 }
