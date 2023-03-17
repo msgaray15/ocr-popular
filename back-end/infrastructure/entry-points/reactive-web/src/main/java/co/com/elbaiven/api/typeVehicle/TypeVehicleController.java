@@ -1,5 +1,6 @@
-package co.com.elbaiven.api;
+package co.com.elbaiven.api.typeVehicle;
 
+import co.com.elbaiven.api.ResponseAPI;
 import co.com.elbaiven.model.typevehicle.TypeVehicle;
 import co.com.elbaiven.model.user.User;
 import co.com.elbaiven.usecase.typevehicle.TypeVehicleUseCase;
@@ -11,7 +12,6 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @RestController
-@CrossOrigin(origins = "*",methods = {RequestMethod.POST,RequestMethod.GET,RequestMethod.DELETE,RequestMethod.PUT})
 @RequestMapping(value = "/api/typeVehicle", produces = MediaType.APPLICATION_JSON_VALUE)
 @AllArgsConstructor
 public class TypeVehicleController {
@@ -23,22 +23,26 @@ public class TypeVehicleController {
     }
 
     @GetMapping("{id}")
-    public Mono<TypeVehicle> getId(@PathVariable("id") Long id) {
-        return  typeVehicleUseCase.read(id);
+    public Mono<ResponseAPI> getId(@PathVariable("id") Long id) {
+        return  typeVehicleUseCase.read(id)
+                .map(e -> ResponseAPI.getResponseAPI(e));
     }
 
     @PostMapping()
-    public Mono<TypeVehicle> create(@RequestBody TypeVehicle typeVehicle) {
-        return  typeVehicleUseCase.create(typeVehicle);
+    public Mono<ResponseAPI> create(@RequestBody TypeVehicle typeVehicle) {
+        return  typeVehicleUseCase.create(typeVehicle)
+                .map(e -> ResponseAPI.getResponseAPI(e));
     }
 
     @PutMapping("{id}")
-    public Mono<TypeVehicle> update(@PathVariable("id") Long id, @RequestBody TypeVehicle typeVehicle) {
-        return  typeVehicleUseCase.update(id,typeVehicle);
+    public Mono<ResponseAPI> update(@PathVariable("id") Long id, @RequestBody TypeVehicle typeVehicle) {
+        return  typeVehicleUseCase.update(id,typeVehicle)
+                .map(e -> ResponseAPI.getResponseAPI(e));
     }
 
     @DeleteMapping("{id}")
-    public Mono<Void> delete(@PathVariable("id") Long id) {
-        return  typeVehicleUseCase.delete(id);
+    public Mono<ResponseAPI> delete(@PathVariable("id") Long id) {
+        return  typeVehicleUseCase.delete(id)
+                .map(e -> ResponseAPI.getResponseAPI("Eliminado Exitosamente"));
     }
 }

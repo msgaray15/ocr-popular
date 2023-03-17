@@ -7,4 +7,5 @@ dependencies {
     implementation 'io.jsonwebtoken:jjwt:0.7.0'
     //implementation 'eu.bitwalker:UserAgentUtils:1.14'
     implementation 'javax.servlet:servlet-api:2.5'
+    implementation 'org.glassfish:javax.xml.bind:10.0-b28'
 }

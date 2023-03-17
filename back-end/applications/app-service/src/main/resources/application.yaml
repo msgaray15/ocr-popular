@@ -20,3 +20,7 @@ management:
     health:
       probes:
         enabled: true
+
+logging:
+  level:
+    root: ${LOG4J_LEVEL:INFO}

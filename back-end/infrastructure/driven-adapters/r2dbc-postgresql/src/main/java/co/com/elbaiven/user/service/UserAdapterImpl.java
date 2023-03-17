@@ -1,6 +1,7 @@
 package co.com.elbaiven.user.service;
 
 import co.com.elbaiven.adapter.JWTOperations;
+import co.com.elbaiven.api.exception.util.ErrorException;
 import co.com.elbaiven.model.person.Person;
 import co.com.elbaiven.model.person.gateways.PersonRepository;
 import co.com.elbaiven.model.rol.Rol;
@@ -16,10 +17,14 @@ import co.com.elbaiven.rol.repository.RolReactiveRepository;
 import co.com.elbaiven.rol.service.RolAdapterImpl;
 import co.com.elbaiven.user.model.UserModel;
 import co.com.elbaiven.user.repository.UserReactiveRepository;
+import co.com.elbaiven.util.LoggerMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import reactor.core.CoreSubscriber;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.concurrent.CompletableFuture;
 
 @Service
 @RequiredArgsConstructor
@@ -27,6 +32,7 @@ public class UserAdapterImpl implements UserRepository {
     private final UserReactiveRepository userReactiveRepository;
     private  final PersonAdapterImpl personAdapterImpl;
     private final RolAdapterImpl rolAdapterImpl;
+    private final LoggerMessage loggerMessage = new LoggerMessage("Output User");
 
     public Mono<User> create(User  user) {
         return !notNullFields(user) ?
@@ -35,36 +41,52 @@ public class UserAdapterImpl implements UserRepository {
                 .map((e) -> toUser(e));
     }
 
-    public Mono<User> read(Long id) {
+    public Mono<UserComplete> read(Long id) {
         return userReactiveRepository.findById(id)
-                .map((e) ->toUser(e));
+                .flatMap((e) ->{
+                    Mono<Person> person = personAdapterImpl.read(e.getIdPerson());
+                    Mono<Rol> rol = rolAdapterImpl.read(e.getIdRol());
+                    return Mono.zip(person, rol)
+                            .map(tuple ->getUserComplete(e,tuple.getT1(),tuple.getT2()));
+                })
+                .switchIfEmpty(Mono.defer(()->{
+                    throw new ErrorException("200","No existe Usuario con el Id: "+id.toString());
+                }));
     }
 
     public Mono<Login> login(String email, String password) {
-
         return userReactiveRepository.findByEmailAndPassword(email,password)
                 .flatMap((e) ->{
-                    if(e == null) return null;
                     Mono<Person> person = personAdapterImpl.read(e.getIdPerson());
                     Mono<Rol> rol = rolAdapterImpl.read(e.getIdRol());
                     return Mono.zip(person, rol)
                             .map(tuple ->getLogin(e,tuple.getT1(),tuple.getT2()));
-                });
+                })
+                .switchIfEmpty(Mono.defer(()->{
+                    throw new ErrorException("200","Usuario o contraseña son incorrectos");
+                }));
+    }
+
+    private Void aux (){
+        throw new ErrorException("200","Usuario o contraseña son incorrectos");
     }
 
     private Login getLogin(UserModel userModel, Person person, Rol rol){
-        return Login.builder()
+        Login login = Login.builder()
                 .user(userModel.getEmail())
-                .token(JWTOperations.getJWTToken(
-                        UserComplete.builder()
-                            .id(userModel.getId())
-                            .person(person)
-                            .rol(rol)
-                            .email(userModel.getEmail())
-                            .build()))
+                .token(JWTOperations.getJWTToken(getUserComplete(userModel, person, rol)))
+                .build();
+        loggerMessage.loggerInfo(login.toString());
+        return login;
+    }
+    private UserComplete getUserComplete (UserModel userModel, Person person, Rol rol){
+        return UserComplete.builder()
+                .id(userModel.getId())
+                .person(person)
+                .rol(rol)
+                .email(userModel.getEmail())
                 .build();
     }
-
     public Mono<User> update(Long id, User user) {
         user.setId(id);
         return (id > 0 && !notNullFields(user)) ?

@@ -1,9 +1,9 @@
-package co.com.elbaiven.api.user.inrq;
+package co.com.elbaiven.api.user.inRQ;
 
 import lombok.Data;
 
 @Data
-public class LoginRq {
+public class LoginRQ {
     private  String email;
     private String password;
 }

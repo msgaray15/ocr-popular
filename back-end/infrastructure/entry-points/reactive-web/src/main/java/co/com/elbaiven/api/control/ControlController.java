@@ -1,5 +1,6 @@
-package co.com.elbaiven.api;
+package co.com.elbaiven.api.control;
 
+import co.com.elbaiven.api.ResponseAPI;
 import co.com.elbaiven.model.control.Control;
 import co.com.elbaiven.model.vehicle.Vehicle;
 import co.com.elbaiven.usecase.control.ControlUseCase;
@@ -11,7 +12,6 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @RestController
-@CrossOrigin(origins = "*",methods = {RequestMethod.POST,RequestMethod.GET,RequestMethod.DELETE,RequestMethod.PUT})
 @RequestMapping(value = "/api/control", produces = MediaType.APPLICATION_JSON_VALUE)
 @AllArgsConstructor
 public class ControlController {
@@ -23,22 +23,26 @@ public class ControlController {
     }
 
     @GetMapping("{id}")
-    public Mono<Control> getId(@PathVariable("id") Long id) {
-        return  controlUseCase.read(id);
+    public Mono<ResponseAPI> getId(@PathVariable("id") Long id) {
+        return  controlUseCase.read(id)
+                .map(e -> ResponseAPI.getResponseAPI(e));
     }
 
     @PostMapping()
-    public Mono<Control> create(@RequestBody Control control) {
-        return  controlUseCase.create(control);
+    public Mono<ResponseAPI> create(@RequestBody Control control) {
+        return  controlUseCase.create(control)
+                .map(e -> ResponseAPI.getResponseAPI(e));
     }
 
     @PutMapping("{id}")
-    public Mono<Control> update(@PathVariable("id") Long id, @RequestBody Control control) {
-        return  controlUseCase.update(id,control);
+    public Mono<ResponseAPI> update(@PathVariable("id") Long id, @RequestBody Control control) {
+        return  controlUseCase.update(id,control)
+                .map(e -> ResponseAPI.getResponseAPI(e));
     }
 
     @DeleteMapping("{id}")
-    public Mono<Void> delete(@PathVariable("id") Long id) {
-        return  controlUseCase.delete(id);
+    public Mono<ResponseAPI> delete(@PathVariable("id") Long id) {
+        return  controlUseCase.delete(id)
+                .map(e -> ResponseAPI.getResponseAPI("Elimiando Exitosamente"));
     }
 }

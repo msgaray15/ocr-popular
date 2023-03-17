@@ -1,6 +1,7 @@
 apply plugin: 'org.springframework.boot'
 
 dependencies {
+	implementation project( ':util')
 	implementation project( ':jwt-commons')
 	implementation project( ':reactive-web')
 	implementation project( ':r2dbc-postgresql')

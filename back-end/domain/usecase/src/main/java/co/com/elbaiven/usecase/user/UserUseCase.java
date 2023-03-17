@@ -11,12 +11,11 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class UserUseCase {
     private final UserRepository userRepository;
-
     public Mono<User> create(User user){
         return userRepository.create(user);
     }
 
-    public Mono<User> read(Long id){
+    public Mono<UserComplete> read(Long id){
         return userRepository.read(id);
     }
 
@@ -32,6 +31,7 @@ public class UserUseCase {
         return userRepository.getAll();
     }
     public Mono<Login> login(String email, String password){
+
         return userRepository.login(email,password);
     }
 
