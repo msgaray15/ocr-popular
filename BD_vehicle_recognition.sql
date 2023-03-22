@@ -166,6 +166,7 @@ CREATE TABLE public.state (
 ALTER TABLE public.state OWNER TO postgres;
 GRANT ALL ON TABLE public.state TO postgres;
 
+INSERT INTO public.state ("name") VALUES('input','out');
 
 -- public.type_vehicle definition
 
@@ -246,7 +247,7 @@ GRANT ALL ON TABLE public.vehicles TO postgres;
 
 CREATE TABLE public.controls (
 	id bigserial NOT NULL,
-	"date" timestamptz NOT NULL,
+	"date" varchar(20) NOT NULL,
 	id_state int8 NOT NULL,
 	id_vehicle int8 NOT NULL,
 	CONSTRAINT controls_pkey PRIMARY KEY (id),
