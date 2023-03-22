@@ -30,48 +30,88 @@ import java.util.concurrent.CompletableFuture;
 @RequiredArgsConstructor
 public class UserAdapterImpl implements UserRepository {
     private final UserReactiveRepository userReactiveRepository;
-    private  final PersonAdapterImpl personAdapterImpl;
+    private final PersonAdapterImpl personAdapterImpl;
     private final RolAdapterImpl rolAdapterImpl;
-    private final LoggerMessage loggerMessage = new LoggerMessage("Output User");
+    private static final LoggerMessage loggerMessage = new LoggerMessage("Out User");
 
-    public Mono<User> create(User  user) {
-        return !notNullFields(user) ?
-                Mono.error(new Exception("Los campos no comple con los valores aceptados")):
-                userReactiveRepository.save(toUserModel(user))
-                .map((e) -> toUser(e));
+    public Mono<User> create(User user) {
+        return userReactiveRepository.save(toUserModel(user))
+                .map((e) -> toUser(e))
+                .doOnError(err -> {
+                    throw new ErrorException("400", err.getMessage());
+                });
     }
 
     public Mono<UserComplete> read(Long id) {
         return userReactiveRepository.findById(id)
-                .flatMap((e) ->{
+                .flatMap((e) -> {
                     Mono<Person> person = personAdapterImpl.read(e.getIdPerson());
                     Mono<Rol> rol = rolAdapterImpl.read(e.getIdRol());
                     return Mono.zip(person, rol)
-                            .map(tuple ->getUserComplete(e,tuple.getT1(),tuple.getT2()));
+                            .map(tuple -> getUserComplete(e, tuple.getT1(), tuple.getT2()));
                 })
-                .switchIfEmpty(Mono.defer(()->{
-                    throw new ErrorException("200","No existe Usuario con el Id: "+id.toString());
+                .switchIfEmpty(Mono.defer(() -> {
+                    throw new ErrorException("404", "No existe Usuario con el Id: " + id.toString());
                 }));
     }
 
     public Mono<Login> login(String email, String password) {
-        return userReactiveRepository.findByEmailAndPassword(email,password)
-                .flatMap((e) ->{
+        return userReactiveRepository.findByEmailAndPassword(email, password)
+                .flatMap((e) -> {
                     Mono<Person> person = personAdapterImpl.read(e.getIdPerson());
                     Mono<Rol> rol = rolAdapterImpl.read(e.getIdRol());
                     return Mono.zip(person, rol)
-                            .map(tuple ->getLogin(e,tuple.getT1(),tuple.getT2()));
+                            .map(tuple -> getLogin(e, tuple.getT1(), tuple.getT2()));
                 })
-                .switchIfEmpty(Mono.defer(()->{
-                    throw new ErrorException("200","Usuario o contraseña son incorrectos");
+                .switchIfEmpty(Mono.defer(() -> {
+                    throw new ErrorException("200", "Usuario o contraseña son incorrectos");
                 }));
     }
 
-    private Void aux (){
-        throw new ErrorException("200","Usuario o contraseña son incorrectos");
+    public Mono<User> update(Long id, User user) {
+        user.setId(id);
+        return userReactiveRepository.save(toUserModel(user))
+                .map((e) -> toUser(e))
+                .doOnError(err -> {
+                    throw new ErrorException("400", err.getMessage());
+                });
     }
 
-    private Login getLogin(UserModel userModel, Person person, Rol rol){
+    public Mono<Void> delete(Long id) {
+        return userReactiveRepository.deleteById(id)
+                .doOnError(err -> {
+                    throw new ErrorException("400", err.getMessage());
+                });
+    }
+
+    public Flux<User> getAll() {
+        return userReactiveRepository.findAll()
+                .map((e) -> toUser(e));
+    }
+
+    private static UserModel toUserModel(User user) {
+        return UserModel.builder()
+                .id(user.getId())
+                .idPerson(user.getIdPerson())
+                .idRol(user.getIdRol())
+                .email(user.getEmail())
+                .password(user.getPassword())
+                .build();
+    }
+
+    private static User toUser(UserModel userModel) {
+        User user = User.builder()
+                .id(userModel.getId())
+                .email(userModel.getEmail())
+                .idRol(userModel.getIdRol())
+                .idPerson(userModel.getIdPerson())
+                .password(userModel.getPassword())
+                .build();
+        loggerMessage.loggerInfo(user.toString());
+        return user;
+    }
+
+    private Login getLogin(UserModel userModel, Person person, Rol rol) {
         Login login = Login.builder()
                 .user(userModel.getEmail())
                 .token(JWTOperations.getJWTToken(getUserComplete(userModel, person, rol)))
@@ -79,53 +119,17 @@ public class UserAdapterImpl implements UserRepository {
         loggerMessage.loggerInfo(login.toString());
         return login;
     }
-    private UserComplete getUserComplete (UserModel userModel, Person person, Rol rol){
-        return UserComplete.builder()
+
+    private UserComplete getUserComplete(UserModel userModel, Person person, Rol rol) {
+        UserComplete userComplete = UserComplete.builder()
                 .id(userModel.getId())
                 .person(person)
                 .rol(rol)
                 .email(userModel.getEmail())
                 .build();
-    }
-    public Mono<User> update(Long id, User user) {
-        user.setId(id);
-        return (id > 0 && !notNullFields(user)) ?
-                Mono.error(new Exception("Los campos no comple con los valores aceptados")):
-                userReactiveRepository.save(toUserModel(user))
-                        .map((e) ->toUser(e));
+        loggerMessage.loggerInfo(userComplete.toString());
+        return userComplete;
     }
 
-    public Mono<Void> delete(Long id) {
-        return id < 0 ? Mono.error(new Exception("El campo Id no comple con los valores aceptados")) :
-                userReactiveRepository.deleteById(id);
-    }
 
-    public Flux<User> getAll() {
-        return userReactiveRepository.findAll()
-                .map((e) ->toUser(e));
-    }
-
-    public static UserModel toUserModel(User user) {
-        return new UserModel(
-                user.getId(),
-                user.getIdPerson(),
-                user.getIdRol(),
-                user.getEmail(),
-                user.getPassword()
-        );
-    }
-
-    public static User toUser(UserModel userModel) {
-        return new User(
-                userModel.getId(),
-                userModel.getIdPerson(),
-                userModel.getIdRol(),
-                userModel.getEmail(),
-                userModel.getPassword()
-        );
-    }
-
-    public static boolean notNullFields(User user) {
-        return (user.getIdPerson() > 0 && user.getIdRol() > 0 && user.getEmail().length() > 0 && user.getPassword().length() > 0 );
-    }
 }

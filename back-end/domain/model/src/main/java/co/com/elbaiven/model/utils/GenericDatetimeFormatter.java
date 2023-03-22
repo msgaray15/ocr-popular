@@ -1,4 +1,4 @@
-package co.com.elbaiven.util;
+package co.com.elbaiven.model.utils;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

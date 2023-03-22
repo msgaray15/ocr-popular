@@ -7,6 +7,7 @@ import reactor.core.publisher.Mono;
 public interface StateRepository {
     Mono<State> create(State state);
     Mono<State> read(Long id);
+    Mono<State> getName(String name);
     Mono<State> update(Long id,State state);
     Mono<Void> delete(Long id);
     Flux<State> getAll();

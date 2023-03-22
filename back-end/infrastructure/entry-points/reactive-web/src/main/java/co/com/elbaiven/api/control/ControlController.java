@@ -1,6 +1,7 @@
 package co.com.elbaiven.api.control;
 
 import co.com.elbaiven.api.ResponseAPI;
+import co.com.elbaiven.api.control.inRQ.PlacaExist;
 import co.com.elbaiven.model.control.Control;
 import co.com.elbaiven.model.vehicle.Vehicle;
 import co.com.elbaiven.usecase.control.ControlUseCase;
@@ -31,6 +32,12 @@ public class ControlController {
     @PostMapping()
     public Mono<ResponseAPI> create(@RequestBody Control control) {
         return  controlUseCase.create(control)
+                .map(e -> ResponseAPI.getResponseAPI(e));
+    }
+
+    @PostMapping("exist")
+    public Mono<ResponseAPI> placaExist(@RequestBody PlacaExist placaExist) {
+        return  controlUseCase.placaExist(placaExist.getPlaca(), placaExist.getState())
                 .map(e -> ResponseAPI.getResponseAPI(e));
     }
 

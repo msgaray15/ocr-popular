@@ -1,5 +1,6 @@
 package co.com.elbaiven.person.service;
 
+import co.com.elbaiven.api.exception.util.ErrorException;
 import co.com.elbaiven.model.control.Control;
 import co.com.elbaiven.model.control.gateways.ControlRepository;
 import co.com.elbaiven.model.person.Person;
@@ -17,28 +18,37 @@ public class PersonAdapterImpl implements PersonRepository {
     private final PersonReactiveRepository personReactiveRepository;
 
     public Mono<Person> create(Person  person) {
-        return !notNullFields(person) ?
-                Mono.error(new Exception("Los campos no comple con los valores aceptados")):
-                personReactiveRepository.save(toPersonModel(person))
-                .map((e) -> toPerson(e));
+        return personReactiveRepository.save(toPersonModel(person))
+                .map((e) -> toPerson(e))
+                .doOnError(err -> {
+                    throw new ErrorException("400", err.getMessage());
+                });
     }
 
     public Mono<Person> read(Long id) {
         return personReactiveRepository.findById(id)
-                .map((e) ->toPerson(e));
+                .map((e) ->toPerson(e))
+                .switchIfEmpty(Mono.defer(() -> {
+                                    throw new ErrorException("404", "Person no encontrado");
+                                }
+                        )
+                );
     }
 
     public Mono<Person> update(Long id, Person person) {
         person.setId(id);
-        return (id > 0 && !notNullFields(person)) ?
-                Mono.error(new Exception("Los campos no comple con los valores aceptados")):
-                personReactiveRepository.save(toPersonModel(person))
-                        .map((e) ->toPerson(e));
+        return personReactiveRepository.save(toPersonModel(person))
+                .map((e) ->toPerson(e))
+                .doOnError(err -> {
+                    throw new ErrorException("400", err.getMessage());
+                });
     }
 
     public Mono<Void> delete(Long id) {
-        return id < 0 ? Mono.error(new Exception("El campo Id no comple con los valores aceptados")) :
-                personReactiveRepository.deleteById(id);
+        return personReactiveRepository.deleteById(id)
+                .doOnError(err -> {
+                    throw new ErrorException("400", err.getMessage());
+                });
     }
 
     public Flux<Person> getAll() {
@@ -47,26 +57,22 @@ public class PersonAdapterImpl implements PersonRepository {
     }
 
     public static PersonModel toPersonModel(Person person) {
-        return new PersonModel(
-                person.getId(),
-                person.getIdentification(),
-                person.getName(),
-                person.getPhone(),
-                person.getAddress()
-        );
+        return  PersonModel.builder()
+                .id(person.getId())
+                .phone(person.getPhone())
+                .address(person.getAddress())
+                .name(person.getName())
+                .identification(person.getIdentification())
+                .build();
     }
 
     public static Person toPerson (PersonModel personModel) {
-        return new Person(
-                personModel.getId(),
-                personModel.getIdentification(),
-                personModel.getName(),
-                personModel.getPhone(),
-                personModel.getAddress()
-        );
-    }
-
-    public static boolean notNullFields(Person person) {
-        return (person.getIdentification() > 0 && person.getName().length() > 0 && person.getPhone() > 0 && person.getAddress().length() > 0 );
+        return  Person.builder()
+                .id(personModel.getId())
+                .identification(personModel.getIdentification())
+                .name(personModel.getName())
+                .phone(personModel.getPhone())
+                .address(personModel.getAddress())
+                .build();
     }
 }

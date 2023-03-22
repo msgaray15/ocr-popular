@@ -7,11 +7,10 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
+@Builder(toBuilder = true)
 public class Control {
     private Long id;
-    private LocalDateTime date;
-    private Long idState;
+    private String date;
+    private Long idState; // input; out
     private Long idVehicle;
 }

@@ -1,5 +1,6 @@
 package co.com.elbaiven.vehicle.service;
 
+import co.com.elbaiven.api.exception.util.ErrorException;
 import co.com.elbaiven.model.vehicle.Vehicle;
 import co.com.elbaiven.model.vehicle.gateways.VehicleRepository;
 import co.com.elbaiven.vehicle.model.VehicleModel;
@@ -14,57 +15,69 @@ import reactor.core.publisher.Mono;
 public class VehicleAdapterImpl implements VehicleRepository {
     private final VehicleReactiveRepository vehicleReactiveRepository;
 
-    public Mono<Vehicle> create(Vehicle  vehicle) {
-        return !notNullFields(vehicle) ?
-                Mono.error(new Exception("Los campos no comple con los valores aceptados")):
-                vehicleReactiveRepository.save(toVehicleModel(vehicle))
-                .map((e) -> toVehicle(e));
+    public Mono<Vehicle> create(Vehicle vehicle) {
+        return vehicleReactiveRepository.save(toVehicleModel(vehicle))
+                .map((e) -> toVehicle(e))
+                .doOnError(err -> {
+                    throw new ErrorException("400", err.getMessage());
+                });
     }
 
     public Mono<Vehicle> read(Long id) {
         return vehicleReactiveRepository.findById(id)
-                .map((e) ->toVehicle(e));
+                .map((e) -> toVehicle(e))
+                .switchIfEmpty(Mono.defer(() -> {
+                    throw new ErrorException("404", "No se encontraron Vehicles");
+                }));
+    }
+
+    public Mono<Vehicle> getLicensePlate(String licensePlate) {
+        return vehicleReactiveRepository.findByLicensePlate(licensePlate)
+                .map((e) -> toVehicle(e))
+                .switchIfEmpty(Mono.defer(() -> {
+                    throw new ErrorException("404", "No se encontraron Vehicles");
+                }));
     }
 
     public Mono<Vehicle> update(Long id, Vehicle vehicle) {
         vehicle.setId(id);
-        return (id > 0 && !notNullFields(vehicle)) ?
-                Mono.error(new Exception("Los campos no comple con los valores aceptados")):
-                vehicleReactiveRepository.save(toVehicleModel(vehicle))
-                        .map((e) ->toVehicle(e));
+        return vehicleReactiveRepository.save(toVehicleModel(vehicle))
+                .map((e) -> toVehicle(e))
+                .doOnError(err -> {
+                    throw new ErrorException("400", err.getMessage());
+                });
     }
 
     public Mono<Void> delete(Long id) {
-        return id < 0 ? Mono.error(new Exception("El campo Id no comple con los valores aceptados")) :
-                vehicleReactiveRepository.deleteById(id);
+        return vehicleReactiveRepository.deleteById(id)
+                .doOnError(err -> {
+                    throw new ErrorException("400", err.getMessage());
+                });
     }
 
     public Flux<Vehicle> getAll() {
         return vehicleReactiveRepository.findAll()
-                .map((e) ->toVehicle(e));
+                .map((e) -> toVehicle(e));
     }
 
-    public static VehicleModel toVehicleModel(Vehicle vehicle) {
-        return new VehicleModel(
-                vehicle.getId(),
-                vehicle.getSerial(),
-                vehicle.getIdTypeVehicle(),
-                vehicle.getLicensePlate(),
-                vehicle.getIdUser()
-        );
+    private static VehicleModel toVehicleModel(Vehicle vehicle) {
+        return VehicleModel.builder()
+                .id(vehicle.getId())
+                .serial(vehicle.getSerial())
+                .idTypeVehicle(vehicle.getIdTypeVehicle())
+                .idUser(vehicle.getIdUser())
+                .licensePlate(vehicle.getLicensePlate())
+                .build();
     }
 
-    public static Vehicle toVehicle(VehicleModel vehicleModel) {
-        return new Vehicle(
-                vehicleModel.getId(),
-                vehicleModel.getSerial(),
-                vehicleModel.getIdTypeVehicle(),
-                vehicleModel.getLicensePlate(),
-                vehicleModel.getIdUser()
-        );
+    private static Vehicle toVehicle(VehicleModel vehicleModel) {
+        return Vehicle.builder()
+                .id(vehicleModel.getId())
+                .serial(vehicleModel.getSerial())
+                .idTypeVehicle(vehicleModel.getIdTypeVehicle())
+                .idUser(vehicleModel.getIdUser())
+                .licensePlate(vehicleModel.getLicensePlate())
+                .build();
     }
 
-    public static boolean notNullFields(Vehicle vehicle) {
-        return (vehicle.getSerial().length() > 0 && vehicle.getIdTypeVehicle() > 0 && vehicle.getLicensePlate().length() > 0 && vehicle.getIdUser() > 0);
-    }
 }

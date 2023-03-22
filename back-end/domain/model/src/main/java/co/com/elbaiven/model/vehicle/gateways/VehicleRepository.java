@@ -7,6 +7,7 @@ import reactor.core.publisher.Mono;
 public interface VehicleRepository {
     Mono<Vehicle> create(Vehicle vehicle);
     Mono<Vehicle> read(Long id);
+    Mono<Vehicle> getLicensePlate(String licensePlate);
     Mono<Vehicle> update(Long id,Vehicle vehicle);
     Mono<Void> delete(Long id);
     Flux<Vehicle> getAll();

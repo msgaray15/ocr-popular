@@ -17,6 +17,7 @@ import reactor.core.publisher.Mono;
 @AllArgsConstructor
 public class VehicleController {
     private final VehicleUseCase vehicleUseCase;
+    private static final LoggerMessage loggerMessage = new LoggerMessage("Input Vehicle");
 
     @GetMapping
     public Flux<Vehicle> getAll() {

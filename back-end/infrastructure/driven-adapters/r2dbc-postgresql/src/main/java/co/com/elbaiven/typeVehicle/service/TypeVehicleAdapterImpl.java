@@ -1,5 +1,6 @@
 package co.com.elbaiven.typeVehicle.service;
 
+import co.com.elbaiven.api.exception.util.ErrorException;
 import co.com.elbaiven.model.state.State;
 import co.com.elbaiven.model.state.gateways.StateRepository;
 import co.com.elbaiven.model.typevehicle.TypeVehicle;
@@ -17,28 +18,37 @@ public class TypeVehicleAdapterImpl implements TypeVehicleRepository {
     private final TypeVehicleReactiveRepository typeVehicleReactiveRepository;
 
     public Mono<TypeVehicle> create(TypeVehicle typeVehicle) {
-        return !notNullFields(typeVehicle) ?
-                Mono.error(new Exception("Los campos no comple con los valores aceptados")):
-                typeVehicleReactiveRepository.save(toTypeVehicleModel(typeVehicle))
-                .map((e) -> toTypeVehicle(e));
+        return typeVehicleReactiveRepository.save(toTypeVehicleModel(typeVehicle))
+                .map((e) -> toTypeVehicle(e))
+                .doOnError(err -> {
+                    throw new ErrorException("400", err.getMessage());
+                });
     }
 
     public Mono<TypeVehicle> read(Long id) {
         return typeVehicleReactiveRepository.findById(id)
-                .map((e) ->toTypeVehicle(e));
+                .map((e) ->toTypeVehicle(e))
+                .switchIfEmpty(Mono.defer(() -> {
+                                    throw new ErrorException("404", "TypeVehicle no encontrado");
+                                }
+                        )
+                );
     }
 
     public Mono<TypeVehicle> update(Long id, TypeVehicle typeVehicle) {
         typeVehicle.setId(id);
-        return (id > 0 && !notNullFields(typeVehicle)) ?
-                Mono.error(new Exception("Los campos no comple con los valores aceptados")):
-                typeVehicleReactiveRepository.save(toTypeVehicleModel(typeVehicle))
-                        .map((e) ->toTypeVehicle(e));
+        return typeVehicleReactiveRepository.save(toTypeVehicleModel(typeVehicle))
+                .map((e) ->toTypeVehicle(e))
+                .doOnError(err -> {
+                    throw new ErrorException("400", err.getMessage());
+                });
     }
 
     public Mono<Void> delete(Long id) {
-        return id < 0 ? Mono.error(new Exception("El campo Id no comple con los valores aceptados")) :
-                typeVehicleReactiveRepository.deleteById(id);
+        return typeVehicleReactiveRepository.deleteById(id)
+                .doOnError(err -> {
+                    throw new ErrorException("400", err.getMessage());
+                });
     }
 
     public Flux<TypeVehicle> getAll() {
@@ -47,20 +57,16 @@ public class TypeVehicleAdapterImpl implements TypeVehicleRepository {
     }
 
     public static TypeVehicleModel toTypeVehicleModel(TypeVehicle typeVehicle) {
-        return new TypeVehicleModel(
-                typeVehicle.getId(),
-                typeVehicle.getName()
-        );
+        return  TypeVehicleModel.builder()
+                .id(typeVehicle.getId())
+                .name(typeVehicle.getName())
+                .build();
     }
 
     public static TypeVehicle toTypeVehicle(TypeVehicleModel typeVehicleModel) {
-        return new TypeVehicle(
-                typeVehicleModel.getId(),
-                typeVehicleModel.getName()
-        );
-    }
-
-    public static boolean notNullFields(TypeVehicle typeVehicle) {
-        return (typeVehicle.getName().length() > 0 );
+        return  TypeVehicle.builder()
+                .id(typeVehicleModel.getId())
+                .name(typeVehicleModel.getName())
+                .build();
     }
 }

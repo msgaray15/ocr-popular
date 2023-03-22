@@ -6,8 +6,7 @@ import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
+@Builder(toBuilder = true)
 @Table("roles")
 public class RolModel {
     @Id

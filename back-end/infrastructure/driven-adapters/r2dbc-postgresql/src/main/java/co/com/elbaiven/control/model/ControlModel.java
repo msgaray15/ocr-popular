@@ -8,15 +8,14 @@ import org.springframework.data.relational.core.mapping.Table;
 import java.time.LocalDateTime;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
+@Builder(toBuilder = true)
 @Table("controls")
 public class ControlModel {
     @Id
     @Column("id")
     private Long id;
     @Column("date")
-    private LocalDateTime date;
+    private String date;
     @Column("id_state")
     private Long idState;
     @Column("id_vehicle")

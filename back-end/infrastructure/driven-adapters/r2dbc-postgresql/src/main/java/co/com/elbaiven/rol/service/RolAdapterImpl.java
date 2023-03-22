@@ -1,5 +1,6 @@
 package co.com.elbaiven.rol.service;
 
+import co.com.elbaiven.api.exception.util.ErrorException;
 import co.com.elbaiven.model.rol.Rol;
 import co.com.elbaiven.model.rol.gateways.RolRepository;
 import co.com.elbaiven.rol.model.RolModel;
@@ -15,28 +16,37 @@ public class RolAdapterImpl implements RolRepository {
     private final RolReactiveRepository rolReactiveRepository;
 
     public Mono<Rol> create(Rol rol) {
-        return !notNullFields(rol) ?
-                Mono.error(new Exception("Los campos no comple con los valores aceptados")):
-                rolReactiveRepository.save(toRolModel(rol))
-                .map((e) -> toRol(e));
+        return rolReactiveRepository.save(toRolModel(rol))
+                .map((e) -> toRol(e))
+                .doOnError(err -> {
+                    throw new ErrorException("400", err.getMessage());
+                });
     }
 
     public Mono<Rol> read(Long id) {
         return rolReactiveRepository.findById(id)
-                .map((e) ->toRol(e));
+                .map((e) ->toRol(e))
+                .switchIfEmpty(Mono.defer(() -> {
+                                    throw new ErrorException("404", "Rol no encontrado");
+                                }
+                        )
+                );
     }
 
     public Mono<Rol> update(Long id, Rol rol) {
         rol.setId(id);
-        return (id > 0 && !notNullFields(rol)) ?
-                Mono.error(new Exception("Los campos no comple con los valores aceptados")):
-                rolReactiveRepository.save(toRolModel(rol))
-                        .map((e) ->toRol(e));
+        return rolReactiveRepository.save(toRolModel(rol))
+                .map((e) ->toRol(e))
+                .doOnError(err -> {
+                    throw new ErrorException("400", err.getMessage());
+                });
     }
 
     public Mono<Void> delete(Long id) {
-        return id < 0 ? Mono.error(new Exception("El campo Id no comple con los valores aceptados")) :
-                rolReactiveRepository.deleteById(id);
+        return rolReactiveRepository.deleteById(id)
+                .doOnError(err -> {
+                    throw new ErrorException("400", err.getMessage());
+                });
     }
 
     public Flux<Rol> getAll() {
@@ -45,20 +55,17 @@ public class RolAdapterImpl implements RolRepository {
     }
 
     public static RolModel toRolModel(Rol rol) {
-        return new RolModel(
-                rol.getId(),
-                rol.getName()
-        );
+        return RolModel.builder()
+                .id(rol.getId())
+                .name(rol.getName())
+                .build();
     }
 
     public static Rol toRol(RolModel rolModel) {
-        return new Rol(
-                rolModel.getId(),
-                rolModel.getName()
-        );
+        return  Rol.builder()
+                .id(rolModel.getId())
+                .name(rolModel.getName())
+                .build();
     }
 
-    public static boolean notNullFields(Rol rol) {
-        return (rol.getName().length() > 0 );
-    }
 }
