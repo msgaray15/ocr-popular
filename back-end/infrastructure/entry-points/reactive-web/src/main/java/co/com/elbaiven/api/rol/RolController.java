@@ -1,6 +1,7 @@
 package co.com.elbaiven.api.rol;
 
 import co.com.elbaiven.api.ResponseAPI;
+import co.com.elbaiven.api.rol.inRQ.RolRQ;
 import co.com.elbaiven.model.rol.Rol;
 import co.com.elbaiven.usecase.rol.RolUseCase;
 import lombok.AllArgsConstructor;
@@ -23,24 +24,29 @@ public class RolController {
     @GetMapping("{id}")
     public Mono<ResponseAPI> getId(@PathVariable("id") Long id) {
         return  rolUseCase.read(id)
-                .map(e -> ResponseAPI.getResponseAPI(e));
+                .map(ResponseAPI::getResponseAPI);
     }
 
     @PostMapping()
-    public Mono<ResponseAPI> create(@RequestBody Rol rol) {
-        return  rolUseCase.create(rol)
-                .map(e -> ResponseAPI.getResponseAPI(e));
+    public Mono<ResponseAPI> create(@RequestBody RolRQ rolRQ) {
+        return  rolUseCase.create(toRol(rolRQ))
+                .map(ResponseAPI::getResponseAPI);
     }
 
     @PutMapping("{id}")
-    public Mono<ResponseAPI> update(@PathVariable("id") Long id, @RequestBody Rol rol) {
-        return  rolUseCase.update(id,rol)
-                .map(e -> ResponseAPI.getResponseAPI(e));
+    public Mono<ResponseAPI> update(@PathVariable("id") Long id, @RequestBody RolRQ rolRQ) {
+        return  rolUseCase.update(id,toRol(rolRQ))
+                .map(ResponseAPI::getResponseAPI);
     }
 
     @DeleteMapping("{id}")
     public Mono<ResponseAPI> delete(@PathVariable("id") Long id) {
         return  rolUseCase.delete(id)
                 .map(e -> ResponseAPI.getResponseAPI("Eliminado Exitosamente"));
+    }
+    private static Rol toRol(RolRQ rolRQ){
+        return Rol.builder()
+                .name(rolRQ.getName())
+                .build();
     }
 }

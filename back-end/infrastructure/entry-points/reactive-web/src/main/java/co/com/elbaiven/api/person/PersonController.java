@@ -1,6 +1,8 @@
 package co.com.elbaiven.api.person;
 
 import co.com.elbaiven.api.ResponseAPI;
+import co.com.elbaiven.api.person.inRQ.Identification;
+import co.com.elbaiven.api.person.inRQ.PersonRQ;
 import co.com.elbaiven.model.person.Person;
 import co.com.elbaiven.model.rol.Rol;
 import co.com.elbaiven.usecase.person.PersonUseCase;
@@ -24,19 +26,19 @@ public class PersonController {
     @GetMapping("{id}")
     public Mono<ResponseAPI> getId(@PathVariable("id") Long id) {
         return  personUseCase.read(id)
-                .map(e -> ResponseAPI.getResponseAPI(e));
+                .map(ResponseAPI::getResponseAPI);
     }
 
     @PostMapping()
-    public Mono<ResponseAPI> create(@RequestBody Person person) {
-        return  personUseCase.create(person)
-                .map(e -> ResponseAPI.getResponseAPI(e));
+    public Mono<ResponseAPI> create(@RequestBody PersonRQ personRQ) {
+        return  personUseCase.create(toPerson(personRQ))
+                .map(ResponseAPI::getResponseAPI);
     }
 
     @PutMapping("{id}")
-    public Mono<ResponseAPI> update(@PathVariable("id") Long id, @RequestBody Person person) {
-        return  personUseCase.update(id,person)
-                .map(e -> ResponseAPI.getResponseAPI(e));
+    public Mono<ResponseAPI> update(@PathVariable("id") Long id, @RequestBody PersonRQ personRQ) {
+        return  personUseCase.update(id,toPerson(personRQ))
+                .map(ResponseAPI::getResponseAPI);
 
     }
 
@@ -44,5 +46,20 @@ public class PersonController {
     public Mono<ResponseAPI> delete(@PathVariable("id") Long id) {
         return  personUseCase.delete(id)
                 .map(e -> ResponseAPI.getResponseAPI("Eliminado exitosamente"));
+    }
+
+    @PostMapping("/existIdentification")
+    public Mono<ResponseAPI>  existIdentification(@RequestBody Identification identification){
+        return personUseCase.existIdentification(identification.getIdentification())
+                .map(ResponseAPI::getResponseAPI);
+    }
+
+    private static Person toPerson(PersonRQ personRQ){
+        return Person.builder()
+                .name(personRQ.getName())
+                .address(personRQ.getAddress())
+                .phone(personRQ.getPhone())
+                .identification(personRQ.getIdentification())
+                .build();
     }
 }

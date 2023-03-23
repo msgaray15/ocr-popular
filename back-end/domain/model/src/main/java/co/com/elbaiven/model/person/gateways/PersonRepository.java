@@ -10,4 +10,5 @@ public interface PersonRepository {
     Mono<Person> update(Long id,Person person);
     Mono<Void> delete(Long id);
     Flux<Person> getAll();
+    Mono<Boolean> existIdentification(Long identificacion);
 }

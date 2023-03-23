@@ -3,6 +3,7 @@ package co.com.elbaiven.api.user;
 import co.com.elbaiven.api.ResponseAPI;
 import co.com.elbaiven.api.exception.util.ErrorException;
 import co.com.elbaiven.api.user.inRQ.LoginRQ;
+import co.com.elbaiven.api.user.inRQ.UserRQ;
 import co.com.elbaiven.model.user.User;
 import co.com.elbaiven.usecase.user.UserUseCase;
 import co.com.elbaiven.util.LoggerMessage;
@@ -29,21 +30,21 @@ public class UserController {
     public Mono<ResponseAPI> getId(@PathVariable("id") Long id) {
         loggerMessage.loggerInfo("Read: "+id);
         return  userUseCase.read(id)
-                .map(e -> ResponseAPI.getResponseAPI(e));
+                .map(ResponseAPI::getResponseAPI);
     }
 
     @PostMapping()
-    public Mono<ResponseAPI> create(@RequestBody User user) {
-        loggerMessage.loggerInfo("Create: "+user.toString());
-        return  userUseCase.create(user)
-                .map(e -> ResponseAPI.getResponseAPI(e));
+    public Mono<ResponseAPI> create(@RequestBody UserRQ userRQ) {
+        loggerMessage.loggerInfo("Create: "+userRQ.toString());
+        return  userUseCase.create(toUser(userRQ))
+                .map(ResponseAPI::getResponseAPI);
     }
 
     @PutMapping("{id}")
-    public Mono<ResponseAPI> update(@PathVariable("id") Long id, @RequestBody User user) {
-        loggerMessage.loggerInfo("Update: "+user.toString());
-        return  userUseCase.update(id,user)
-                .map(e -> ResponseAPI.getResponseAPI(e));
+    public Mono<ResponseAPI> update(@PathVariable("id") Long id, @RequestBody UserRQ userRQ) {
+        loggerMessage.loggerInfo("Update: "+userRQ.toString());
+        return  userUseCase.update(id,toUser(userRQ))
+                .map(ResponseAPI::getResponseAPI);
     }
 
     @DeleteMapping("{id}")
@@ -57,7 +58,16 @@ public class UserController {
     public Mono<ResponseAPI> login (@RequestBody LoginRQ login){
         loggerMessage.loggerInfo("Login: "+login.toString());
         return userUseCase.login(login.getEmail(), login.getPassword())
-                .map(e -> ResponseAPI.getResponseAPI(e));
+                .map(ResponseAPI::getResponseAPI);
+    }
+
+    private static User toUser (UserRQ userRQ){
+        return User.builder()
+                .email(userRQ.getEmail())
+                .idRol(userRQ.getIdRol())
+                .password(userRQ.getPassword())
+                .idPerson(userRQ.getIdPerson())
+                .build();
     }
 
 }

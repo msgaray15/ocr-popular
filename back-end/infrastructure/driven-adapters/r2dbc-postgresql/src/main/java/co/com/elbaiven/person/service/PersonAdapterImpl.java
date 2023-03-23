@@ -56,6 +56,13 @@ public class PersonAdapterImpl implements PersonRepository {
                 .map((e) ->toPerson(e));
     }
 
+    public Mono<Boolean> existIdentification(Long identificacion) {
+        return personReactiveRepository.findByIdentification(identificacion)
+                .map(e-> true)
+                .defaultIfEmpty(false);
+
+    }
+
     public static PersonModel toPersonModel(Person person) {
         return  PersonModel.builder()
                 .id(person.getId())

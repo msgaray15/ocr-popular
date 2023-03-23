@@ -29,4 +29,8 @@ public class PersonUseCase {
     public Flux<Person> getAll(){
         return personRepository.getAll();
     }
+
+    public Mono<Boolean> existIdentification(Long identificacion){
+        return personRepository.existIdentification(identificacion);
+    }
 }

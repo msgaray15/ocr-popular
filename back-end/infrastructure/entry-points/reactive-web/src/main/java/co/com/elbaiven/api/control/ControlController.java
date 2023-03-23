@@ -1,11 +1,10 @@
 package co.com.elbaiven.api.control;
 
 import co.com.elbaiven.api.ResponseAPI;
+import co.com.elbaiven.api.control.inRQ.ControlRQ;
 import co.com.elbaiven.api.control.inRQ.PlacaExist;
 import co.com.elbaiven.model.control.Control;
-import co.com.elbaiven.model.vehicle.Vehicle;
 import co.com.elbaiven.usecase.control.ControlUseCase;
-import co.com.elbaiven.usecase.vehicle.VehicleUseCase;
 import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -26,25 +25,25 @@ public class ControlController {
     @GetMapping("{id}")
     public Mono<ResponseAPI> getId(@PathVariable("id") Long id) {
         return  controlUseCase.read(id)
-                .map(e -> ResponseAPI.getResponseAPI(e));
+                .map(ResponseAPI::getResponseAPI);
     }
 
     @PostMapping()
-    public Mono<ResponseAPI> create(@RequestBody Control control) {
-        return  controlUseCase.create(control)
-                .map(e -> ResponseAPI.getResponseAPI(e));
+    public Mono<ResponseAPI> create(@RequestBody ControlRQ controlRQ) {
+        return  controlUseCase.create(toControl(controlRQ))
+                .map(ResponseAPI::getResponseAPI);
     }
 
     @PostMapping("exist")
     public Mono<ResponseAPI> placaExist(@RequestBody PlacaExist placaExist) {
         return  controlUseCase.placaExist(placaExist.getPlaca(), placaExist.getState())
-                .map(e -> ResponseAPI.getResponseAPI(e));
+                .map(ResponseAPI::getResponseAPI);
     }
 
     @PutMapping("{id}")
-    public Mono<ResponseAPI> update(@PathVariable("id") Long id, @RequestBody Control control) {
-        return  controlUseCase.update(id,control)
-                .map(e -> ResponseAPI.getResponseAPI(e));
+    public Mono<ResponseAPI> update(@PathVariable("id") Long id, @RequestBody ControlRQ controlRQ) {
+        return  controlUseCase.update(id,toControl(controlRQ))
+                .map(ResponseAPI::getResponseAPI);
     }
 
     @DeleteMapping("{id}")
@@ -52,4 +51,13 @@ public class ControlController {
         return  controlUseCase.delete(id)
                 .map(e -> ResponseAPI.getResponseAPI("Elimiando Exitosamente"));
     }
+
+    private static Control toControl(ControlRQ controlRQ){
+        return Control.builder()
+                .date(controlRQ.getDate())
+                .idState(controlRQ.getIdState())
+                .idVehicle(controlRQ.getIdVehicle())
+                .build();
+    }
+
 }
