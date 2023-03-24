@@ -148,6 +148,7 @@ CREATE TABLE public.roles (
 ALTER TABLE public.roles OWNER TO postgres;
 GRANT ALL ON TABLE public.roles TO postgres;
 
+INSERT INTO public.roles ("name") VALUES('Administrador','Vigilante','Estudiante');
 
 -- public.state definition
 
