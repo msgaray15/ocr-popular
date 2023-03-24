@@ -1,2 +1,8 @@
-package co.com.elbaiven.api.user.inRQ;public class Email {
+package co.com.elbaiven.api.user.inRQ;
+
+import lombok.Data;
+
+@Data
+public class Email {
+    private String email;
 }

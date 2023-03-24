@@ -68,6 +68,12 @@ public class UserAdapterImpl implements UserRepository {
                 }));
     }
 
+    public Mono<Boolean> existEmail(String email) {
+        return userReactiveRepository.findByEmail(email)
+                .map(e-> true)
+                .defaultIfEmpty(false);
+    }
+
     public Mono<User> update(Long id, User user) {
         user.setId(id);
         return userReactiveRepository.save(toUserModel(user))

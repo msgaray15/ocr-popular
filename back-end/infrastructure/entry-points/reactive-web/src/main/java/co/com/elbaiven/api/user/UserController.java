@@ -2,6 +2,7 @@ package co.com.elbaiven.api.user;
 
 import co.com.elbaiven.api.ResponseAPI;
 import co.com.elbaiven.api.exception.util.ErrorException;
+import co.com.elbaiven.api.user.inRQ.Email;
 import co.com.elbaiven.api.user.inRQ.LoginRQ;
 import co.com.elbaiven.api.user.inRQ.UserRQ;
 import co.com.elbaiven.model.user.User;
@@ -58,6 +59,13 @@ public class UserController {
     public Mono<ResponseAPI> login (@RequestBody LoginRQ login){
         loggerMessage.loggerInfo("Login: "+login.toString());
         return userUseCase.login(login.getEmail(), login.getPassword())
+                .map(ResponseAPI::getResponseAPI);
+    }
+
+    @PostMapping("/existEmail")
+    public Mono<ResponseAPI> existEmail (@RequestBody Email email){
+        loggerMessage.loggerInfo("existEmail: "+email.toString());
+        return userUseCase.existEmail(email.getEmail())
                 .map(ResponseAPI::getResponseAPI);
     }
 

@@ -10,6 +10,7 @@ public interface UserRepository {
     Mono<User> create(User User);
     Mono<UserComplete> read(Long id);
     Mono<Login> login(String email, String password);
+    Mono<Boolean> existEmail(String email);
     Mono<User> update(Long id,User User);
     Mono<Void> delete(Long id);
     Flux<User> getAll();

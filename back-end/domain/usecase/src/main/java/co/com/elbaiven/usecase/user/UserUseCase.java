@@ -35,4 +35,9 @@ public class UserUseCase {
         return userRepository.login(email,password);
     }
 
+    public Mono<Boolean> existEmail(String email){
+
+        return userRepository.existEmail(email);
+    }
+
 }
