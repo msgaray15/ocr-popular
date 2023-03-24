@@ -1,4 +1,4 @@
-import { Button, Form, Card, Spinner } from 'react-bootstrap';
+import { Button, Form, Card, Spinner, InputGroup } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { post } from '../../service/methodAPI';
@@ -7,7 +7,7 @@ import { emptyItemInTheForm } from '../../service/tools';
 const Register = ({ person }) => {
     const [form, setForm] = useState({
         idPerson: person?.id,
-        idRol: 2,
+        idRol: 4, // cambiar
         email: "",
         password: "",
         confirmPassword: ""
@@ -15,7 +15,7 @@ const Register = ({ person }) => {
     const [messenger, setMessenger] = useState([]);
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
-    const userRouter = "/api/v1/users";
+    const userRouter = "/api/user";
 
     useEffect(() => {
         if (person == undefined) navigate("/peopleRegister");
@@ -27,11 +27,21 @@ const Register = ({ person }) => {
         setForm({ ...form, [name]: value });
     };
 
+    const validateInputEmail = (event) =>{
+        if(event.key === "@"){
+            setMessenger(["Es solo el usuario"]);
+            event.preventDefault();
+        } 
+    }
+
     const validate = () => {
         let sout = [];
         if (emptyItemInTheForm(form)) sout.push("Ningun campo puede estar vacio");
         if (form.password.length != 0 && form.confirmPassword.length != 0) sout = validatePasswords(sout);
-        if (form.email.length != 0) validateEmail({ "email": form.email }, sout);
+        if (form.email.length != 0) {
+            form.email = form.email + "@unicesar.edu.co";
+            validateEmail({ "email": form.email }, sout)
+        };
     }
 
     const validateEmail = (email, sout) => {
@@ -40,7 +50,7 @@ const Register = ({ person }) => {
                 console.log(response);
                 if (response.status === 200 && response.data) {
                     sout.push("El email ya existe")
-                } else if (response.status === 500) {
+                } else if(response.status === 500) {
                     sout.push("Error al validar Correo")
                 }
                 sout.length > 0 ? setMessenger(sout) : sendToUser();
@@ -62,7 +72,7 @@ const Register = ({ person }) => {
             if (!(/^(?=.*[A-Z])/).test(form.password)) auxSout.push("- Al menos una letra mayúscula");
             if (!(/^(?=.*\d)/).test(form.password)) auxSout.push("- Al menos un dígito");
             if (!(/^(?=.*[\u0021-\u002b\u003c-\u0040])/).test(form.password)) auxSout.push("- Al menos 1 caracter especial");
-            if (auxSout.length > 0){
+            if (auxSout.length > 0) {
                 auxSout.unshift("La constraseña debe de contener: ");
                 sout = sout.concat(auxSout);
             }
@@ -84,7 +94,7 @@ const Register = ({ person }) => {
     return (
         <div className='d-flex justify-content-center align-items-center vh-100'>
             <Card className='w-50'>
-                <Card.Header as="h5" className='text-center'>Estudiante</Card.Header>
+                <Card.Header as="h5" className='bg-success text-center'>Estudiante</Card.Header>
                 <Card.Body>
                     <Card.Title className='text-center'>Registrar</Card.Title>
                     <div className='d-flex flex-wrap justify-content-center'>
@@ -93,9 +103,12 @@ const Register = ({ person }) => {
                                 <Form.Label>Identificación</Form.Label>
                                 <Form.Control type="text" value={person?.identification} disabled />
                             </Form.Group>
-                            <Form.Group className="mb-3" controlId="formBasicPassword">
-                                <Form.Label>Correo</Form.Label>
-                                <Form.Control type="email" placeholder="Ejem:  example@example.com" name='email' onChange={handleChange} />
+                            <Form.Group className="mb-3">
+                                <Form.Label>Email</Form.Label>
+                                <InputGroup className="inputEmailRegister">
+                                    <Form.Control type="text" placeholder="example" name='email' onKeyPress={validateInputEmail} onChange={handleChange} />
+                                    <InputGroup.Text>@unicesar.edu..</InputGroup.Text>
+                                </InputGroup>
                             </Form.Group>
                         </div>
                         <div className='mx-3'>
@@ -103,7 +116,7 @@ const Register = ({ person }) => {
                                 <Form.Label>Contraseña</Form.Label>
                                 <Form.Control type="password" name='password' onChange={handleChange} />
                             </Form.Group>
-                            <Form.Group className="mb-3">
+                            <Form.Group className="mb-3 m-auto">
                                 <Form.Label>Confirmar contraseña</Form.Label>
                                 <Form.Control type="password" name='confirmPassword' onChange={handleChange} />
                             </Form.Group>
@@ -118,7 +131,7 @@ const Register = ({ person }) => {
                         }
                     </div>
                     <div className='text-end'>
-                        <Button variant="primary mx-2" onClick={() => validate()}>Aceptar</Button>
+                        <Button variant="success primary mx-2" onClick={() => validate()}>Aceptar</Button>
                     </div>
                 </Card.Body>
             </Card>

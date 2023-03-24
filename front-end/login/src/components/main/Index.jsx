@@ -11,10 +11,11 @@ const Index = () => {
         email: "",
         password: ""
     });
-    const loginRouter = "/api/v1/login";
+    const loginRouter = "/api/user/login";
     const regirectTo = {
-        1: "http://localhost:3001/",
-        2: "http://localhost:3002/"
+        "Administrador": "http://localhost:3001/",
+        "Vigilante": "http://localhost:3002/",
+        "Estudiante": "http://localhost:3003/"
     };
 
     const handleChange = (event) => {
@@ -37,14 +38,11 @@ const Index = () => {
             .then(response => {
                 setLoading(false);
                 if (response.status === 200) {
-                    if (response.data.token.length > 0) {
-                        setMessenger("");
-                        redirectToRol(response.data.token);
-                    } else {
-                        setMessenger("Usuario o contraseña no son correctos");
-                    }
-                } else {
+                    redirectToRol(response.data.token);
+                } else if (response.status === 500) {
                     setMessenger("Error al conectar con el servicio");
+                } else {
+                    setMessenger(response?.data?.detail);
                 }
             })
             .catch(e => {
@@ -54,14 +52,14 @@ const Index = () => {
     }
 
     const redirectToRol = (dataUser) => {
-        const rolUser = parseJwt(dataUser)?.data?.rol?.id;
-        window.location.href = regirectTo[rolUser]+"?access="+dataUser.substring(7);
+        const rolUser = parseJwt(dataUser)?.data?.rol?.name;
+        window.location.href = regirectTo[rolUser] + "?access=" + dataUser.substring(7);
     }
 
     return (
         <div className='d-flex justify-content-center align-items-center vh-100'>
             <Card className='w-25'>
-                <Card.Header as="h5" className='text-center'>OVA</Card.Header>
+                <Card.Header as="h5" className='bg-success text-center'>OCR POPULAR</Card.Header>
                 <Card.Body>
                     <Card.Title className='text-center'>Iniciar Sesion</Card.Title>
                     <Form>
@@ -87,10 +85,10 @@ const Index = () => {
                             }
                         </div>
                         <Form.Group className="text-center mt-4">
-                            <Button variant="primary" onClick={() => validate()}>Enviar</Button>
+                            <Button variant="success" onClick={() => validate()}>Enviar</Button>
                         </Form.Group>
                         <Form.Group className="text-center mt-3">
-                            <Link to='/peopleRegister' className='text-primary'>Registrarme</Link>
+                            <Link to='/peopleRegister' className='text-success'>Registrarme</Link>
                         </Form.Group>
                     </Form>
                 </Card.Body>

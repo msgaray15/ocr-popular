@@ -9,7 +9,8 @@ const headers = {
 
 export const get = async (route) => {
     const response = await fetch(BASE_URL + route);
-    const data = await response.json();
+    let data = await response.json();
+    response.status === 200 ? data = data.data : data = data.error;
     return {
         status: response.status,
         data
@@ -22,7 +23,8 @@ export const post = async (route, form) => {
         ...headers,
         body: JSON.stringify(form)
     });
-    const data = await response.json();
+    let data = await response.json();
+    response.status === 200 ? data = data.data : data = data.error;
     return {
         status: response.status,
         data
