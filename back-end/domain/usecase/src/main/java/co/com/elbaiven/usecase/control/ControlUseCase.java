@@ -5,12 +5,14 @@ import co.com.elbaiven.model.control.gateways.ControlRepository;
 import co.com.elbaiven.model.state.gateways.StateRepository;
 import co.com.elbaiven.model.utils.Constants;
 import co.com.elbaiven.model.utils.GenericDatetimeFormatter;
+import co.com.elbaiven.model.utils.ModelListCompleteWithPages;
 import co.com.elbaiven.model.vehicle.gateways.VehicleRepository;
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 
 @RequiredArgsConstructor
 public class ControlUseCase {
@@ -43,8 +45,27 @@ public class ControlUseCase {
         return controlRepository.delete(id);
     }
 
-    public Flux<Control> getAll(){
-        return controlRepository.getAll();
+    public Mono<ModelListCompleteWithPages> getAll(Integer page, Integer pageSize, String typeSearch, String search){
+        return controlRepository.getAll(page, pageSize, typeSearch, search)
+                .collectList()
+                .flatMap(e->controlRepository.count()
+                        .map(count->ModelListCompleteWithPages.
+                                getModelListCompleteWithPages(Arrays.asList(e.toArray()),count, page +1, pageSize)
+                        )
+                );
+    }
+
+    private Mono<Long> getCount(String typeSearch, String search){
+        switch (typeSearch) {
+            case "date":
+                return controlRepository.countFindByDate(search + '%');
+            case "idState":
+                return controlRepository.countFindByIdState(Long.parseLong(search));
+            case "idVehicle":
+                return controlRepository.countFindByIdVehicle(Long.parseLong(search));
+            default:
+                return controlRepository.count();
+        }
     }
 
     private Control getControl(Long idPlaca, Long idState){

@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 public class RolUseCase {
     private final RolRepository rolRepository;
@@ -26,7 +28,8 @@ public class RolUseCase {
         return rolRepository.delete(id);
     }
 
-    public Flux<Rol> getAll(){
-        return rolRepository.getAll();
+    public Mono<List<Rol>> getAll(){
+        return rolRepository.getAll()
+                .collectList();
     }
 }

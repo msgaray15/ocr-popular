@@ -9,6 +9,10 @@ public interface PersonRepository {
     Mono<Person> read(Long id);
     Mono<Person> update(Long id,Person person);
     Mono<Void> delete(Long id);
-    Flux<Person> getAll();
+    Flux<Person> getAll(Integer page, Integer pageSize, String typeSearch, String search);
     Mono<Boolean> existIdentification(Long identificacion);
+    Mono<Long> count();
+    Mono<Long> countFindByName(String Name);
+    Mono<Long> countFindByIdentification(String identification);
+    Mono<Long> countFindByPhone(String phone);
 }

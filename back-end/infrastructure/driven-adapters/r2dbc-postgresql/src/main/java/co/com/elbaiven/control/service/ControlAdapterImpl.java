@@ -4,11 +4,16 @@ import co.com.elbaiven.api.exception.util.ErrorException;
 import co.com.elbaiven.control.model.ControlModel;
 import co.com.elbaiven.control.repository.ControlReactiveRepository;
 import co.com.elbaiven.model.control.Control;
+import co.com.elbaiven.model.control.ControlComplete;
 import co.com.elbaiven.model.control.gateways.ControlRepository;
+import co.com.elbaiven.model.person.Person;
 import co.com.elbaiven.model.rol.Rol;
 import co.com.elbaiven.model.rol.gateways.RolRepository;
+import co.com.elbaiven.model.state.State;
+import co.com.elbaiven.model.vehicle.VehicleComplete;
 import co.com.elbaiven.rol.model.RolModel;
 import co.com.elbaiven.rol.repository.RolReactiveRepository;
+import co.com.elbaiven.state.service.StateAdapterImpl;
 import co.com.elbaiven.vehicle.service.VehicleAdapterImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,6 +24,8 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class ControlAdapterImpl implements ControlRepository {
     private final ControlReactiveRepository controlReactiveRepository;
+    private  final StateAdapterImpl stateAdapterImpl;
+    private  final VehicleAdapterImpl vehicleAdapterImpl;
 
     public Mono<Control> create(Control control) {
         return controlReactiveRepository.save(toControlModel(control))
@@ -54,9 +61,55 @@ public class ControlAdapterImpl implements ControlRepository {
                 });
     }
 
-    public Flux<Control> getAll() {
-        return controlReactiveRepository.findAll()
-                .map((e) -> toControl(e));
+    public Mono<Long> count() {
+        return controlReactiveRepository.count();
+    }
+
+    public Flux<ControlComplete> getAll(Integer page, Integer pageSize, String typeSearch, String search) {
+        return getListControlByTypeSearch(page, pageSize, typeSearch, search)
+                .flatMap((e) -> {
+                    Mono<State> state = stateAdapterImpl.read(e.getIdState());
+                    Mono<VehicleComplete> vehicleComplete = vehicleAdapterImpl.read(e.getIdVehicle());
+                    return Mono.zip(state, vehicleComplete)
+                            .map(tuple -> getControlComplete(e, tuple.getT1(), tuple.getT2()));
+                })
+                .doOnError(err -> {
+                    throw new ErrorException("400", err.getMessage());
+                });
+    }
+
+    public Mono<Long> countFindByDate(String date) {
+        return controlReactiveRepository.countFindByDate(date);
+    }
+
+    public Mono<Long> countFindByIdState(Long idState) {
+        return controlReactiveRepository.countFindByIdState(idState);
+    }
+
+    public Mono<Long> countFindByIdVehicle(Long idVehicle) {
+        return controlReactiveRepository.countFindByIdVehicle(idVehicle);
+    }
+
+    private static ControlComplete getControlComplete(ControlModel controlModel, State state, VehicleComplete vehicleComplete){
+        return ControlComplete.builder()
+                .id(controlModel.getId())
+                .date(controlModel.getDate())
+                .state(state)
+                .vehicle(vehicleComplete)
+                .build();
+    }
+
+    public Flux<ControlModel> getListControlByTypeSearch(Integer page, Integer pageSize, String typeSearch, String search) {
+        switch (typeSearch) {
+            case "date":
+                return controlReactiveRepository.findByDate(search + '%', pageSize, page*pageSize);
+            case "idState":
+                return controlReactiveRepository.findByIdState(Long.parseLong(search), pageSize, page*pageSize);
+            case "idVehicle":
+                return controlReactiveRepository.findByIdVehicle(Long.parseLong(search), pageSize, page*pageSize);
+            default:
+                return controlReactiveRepository.findAll(pageSize, page*pageSize);
+        }
     }
 
     public static ControlModel toControlModel(Control control) {

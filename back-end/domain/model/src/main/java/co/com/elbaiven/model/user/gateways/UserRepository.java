@@ -13,5 +13,8 @@ public interface UserRepository {
     Mono<Boolean> existEmail(String email);
     Mono<User> update(Long id,User User);
     Mono<Void> delete(Long id);
-    Flux<User> getAll();
+    Mono<Long> count();
+    Flux<UserComplete> getAll(Integer page, Integer pageSize, String typeSearch, String search);
+    Mono<Long> countFindByIdRol(Long idRol);
+    Mono<Long> countFindByEmail(String user);
 }

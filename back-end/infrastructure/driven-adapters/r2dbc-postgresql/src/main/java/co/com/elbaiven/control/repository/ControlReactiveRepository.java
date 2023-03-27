@@ -1,10 +1,26 @@
 package co.com.elbaiven.control.repository;
 
 import co.com.elbaiven.control.model.ControlModel;
-import co.com.elbaiven.rol.model.RolModel;
+import org.springframework.data.r2dbc.repository.Query;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 // TODO: This file is just an example, you should delete or modify it
 public interface ControlReactiveRepository extends ReactiveCrudRepository<ControlModel, Long> {
 
+    @Query(value="SELECT * FROM controls c  WHERE c.date LIKE :date LIMIT :pageSize OFFSET :page")
+    Flux<ControlModel> findByDate(String date,Integer pageSize, Integer page);
+    @Query(value="SELECT COUNT(*) FROM controls c  WHERE c.date LIKE :date")
+    Mono<Long> countFindByDate(String date);
+    @Query(value="SELECT * FROM controls LIMIT :pageSize OFFSET :page")
+    Flux<ControlModel> findAll(Integer pageSize, Integer page);
+    @Query(value="SELECT * FROM controls c  WHERE c.id_state LIKE :idState LIMIT :pageSize OFFSET :page")
+    Flux<ControlModel> findByIdState(Long idState, Integer pageSize, Integer page);
+    @Query(value="SELECT COUNT(*) FROM controls c  WHERE c.idState  LIKE :idState")
+    Mono<Long> countFindByIdState(Long idState);
+    @Query(value="SELECT * FROM controls c  WHERE c.idVehicle LIKE :idVehicle LIMIT :pageSize OFFSET :page")
+    Flux<ControlModel> findByIdVehicle(Long idVehicle, Integer pageSize, Integer page);
+    @Query(value="SELECT COUNT(*) FROM controls c  WHERE c.idState  LIKE :idVehicle")
+    Mono<Long> countFindByIdVehicle(Long idVehicle);
 }

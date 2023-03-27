@@ -1,5 +1,6 @@
 package co.com.elbaiven.api;
 
+import co.com.elbaiven.util.LoggerMessage;
 import lombok.Builder;
 import lombok.Data;
 
@@ -8,9 +9,13 @@ import lombok.Data;
 public class ResponseAPI {
     private Object data;
 
+    private static final LoggerMessage loggerMessage = new LoggerMessage("Out");
+
     public static ResponseAPI getResponseAPI(Object o){
-        return ResponseAPI.builder()
+        ResponseAPI responseAPI = ResponseAPI.builder()
                 .data(o)
                 .build();
+        loggerMessage.loggerInfo(responseAPI.toString());
+        return responseAPI;
     }
 }
