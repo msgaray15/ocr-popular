@@ -116,9 +116,9 @@ GRANT ALL ON SEQUENCE public.users_id_seq TO postgres;
 
 CREATE TABLE public.people (
 	id bigserial NOT NULL,
-	identification int8 NOT NULL,
+	identification VARCHAR(10) NOT NULL,
 	"name" text NOT NULL,
-	phone int8 NOT NULL,
+	phone VARCHAR(10) NOT NULL,
 	address text NOT NULL,
 	CONSTRAINT people_identification_key UNIQUE (identification),
 	CONSTRAINT people_pkey PRIMARY KEY (id)
