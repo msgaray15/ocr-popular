@@ -3,3 +3,11 @@
   justify-content: center;
   width: 700px;
 }
+
+a {
+  text-decoration: none !important;
+}
+
+.sizeInputFromPagination{
+  width: 70px !important;
+}

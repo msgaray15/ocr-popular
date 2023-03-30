@@ -1,7 +1,7 @@
-import { Navbar,Dropdown, DropdownButton } from 'react-bootstrap';
+import { Navbar, Dropdown, DropdownButton } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
-const TopBar = ({handleShowMenu}) => {
+const TopBar = ({ handleShowMenu, nameUser }) => {
     return (
         <Navbar className="bg-success p-0">
             <Navbar.Brand className="ps-4 text-light" onClick={handleShowMenu}><Link to={'/'}><strong className="text-white">OCR-POPULAR</strong></Link></Navbar.Brand>
@@ -9,9 +9,9 @@ const TopBar = ({handleShowMenu}) => {
             <Navbar.Collapse className="justify-content-end">
                 <Navbar.Text className="p-0 pe-4">
                     <DropdownButton
-                        drop="start"
+                        align="end"
                         variant="success"
-                        title={<i class="fa-solid fa-user fa-lg"></i>}
+                        title={nameUser}
                     >
                         <Dropdown.Item eventKey="2">Perfil</Dropdown.Item>
                         <Dropdown.Item eventKey="3">Configuracion</Dropdown.Item>

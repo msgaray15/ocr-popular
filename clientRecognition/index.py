@@ -4,6 +4,7 @@ import pytesseract
 import modules.draw as draw  # module to draw
 import modules.processFindContours as processFindContours  # module to find contours
 import modules.filterContours as filterContours  # module to filter contours
+import requests
 
 # ------------------------- global variables ------------------------
 
@@ -46,10 +47,10 @@ while cv2.waitKey(1) != 27:  # exit by pressing Esc
     heightx3 = int(al/3)
     # divide the frame into 3 equal parts of both width and height to create a 3*3 grid
     """
-    #Lineas verticales
+    # Lineas verticales
     cv2.line(frame,(widthx3,0),(widthx3,al),(255,0,0),2)
     cv2.line(frame,(widthx3*2,0),(widthx3*2,al),(255,0,0),2)
-    #Lineas horizontales
+    # Lineas horizontales
     cv2.line(frame,(0,heightx3),(an,heightx3),(255,0,0),2)
     cv2.line(frame,(0,heightx3*2),(an,heightx3*2),(255,0,0),2)
     """
@@ -61,22 +62,28 @@ while cv2.waitKey(1) != 27:  # exit by pressing Esc
 
     # --------- process area of interest to find contours -----------
 
-    contours, _ = processFindContours.find_contours(area_interest)  # find the contours of the area of interest
+    contours, _ = processFindContours.find_contours(
+        area_interest)  # find the contours of the area of interest
     candidates = filterContours.contour_rectangle(
         contours, placa_ratio, placa_width_max, placa_width_min, placa_height_max, placa_height_min)  # find the rectangle of the plate
 
-    if(len(candidates)>0):
-        x, y, w, h = filterContours.create_rectangle(candidates[0]) # get x, y, width and height
-        placa = area_interest[y:y+h, x:x+w] # take the pixels from the plate
-        placa_moothing_edge=processFindContours.invert_image(placa) # invert the pixels
-        texto = pytesseract.image_to_string(placa_moothing_edge,config=options) # convert image to text
-        if(len(texto)  >= 6):
-            
-            print(texto[0:6])
-            #cv2.imshow("Placa: ",placa_moothing_edge)
-            draw.contours(area_interest, candidates, -1, (1, 2, 255), 2) # draw the rectangular outline "the plate"
+    if (len(candidates) > 0):
+        x, y, w, h = filterContours.create_rectangle(
+            candidates[0])  # get x, y, width and height
+        placa = area_interest[y:y+h, x:x+w]  # take the pixels from the plate
+        placa_moothing_edge = processFindContours.invert_image(
+            placa)  # invert the pixels
+        texto = pytesseract.image_to_string(
+            placa_moothing_edge, config=options)  # convert image to text
+        if (len(texto) >= 6):
+            placaText = texto[0:6]
+            print(placaText)
+            # payload = {'placaText': placaText,'state':'inpt'}
+            # r = requests.post('https://miapi.com/comentarios/', json=payload) 
+            # cv2.imshow("Placa: ",placa_moothing_edge)
+            # draw the rectangular outline "the plate"
+            draw.contours(area_interest, candidates, -1, (1, 2, 255), 2)
 
-    
     cv2.imshow(window_name, frame)
 
 source.release()

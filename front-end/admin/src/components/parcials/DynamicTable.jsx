@@ -1,31 +1,58 @@
 import { Table } from 'react-bootstrap';
-import Loading from '../Loading';
 
-const DynamicTable = ({ tableData }) => {
-    console.log("tableData", tableData);
+const DynamicTable = ({ tableStructure, data, routerActions }) => {
+    /*
+    const tableStructure ={
+        thead:["Nombre","Cedula","Tipo de Documento","Correo","Dirección","Telefono","Rol"],
+        tbody:[["person","name"],["person","identification"],["person","identificacionType","abbreviation"],"email",["person","address"],["person","phone"],["rol","name"]]
+    }
+    */
 
-    if (tableData === undefined) return <Loading />
+    const builderHeaderTable = () => {
+        let headers = tableStructure?.thead?.map((item, i) => <th key={i + 1}>{item}</th>);
+        if (routerActions) {
+            headers.push(<th key={0}>Acciones</th>);
+        }
+        return headers;
+    }
+
+    const builderBodyTable = () => data?.map((itemData, i) => <tr key={i}>{builderBodyTableFila(itemData, i + 1)}</tr>);
+
+    const builderBodyTableFila = (itemData, index) => {
+        let fila = tableStructure?.tbody?.map((itemTableStructure, iTableStructure) => {
+            return (
+                <td key={iTableStructure + 1}>
+                    {
+                        !Array.isArray(itemTableStructure) ? itemData[itemTableStructure] : extractData(itemTableStructure, itemData)
+                    }
+                </td>
+            );
+        }
+        );
+        if (routerActions) {
+            fila.push(
+                <th key={tableStructure?.tbody?.length}>
+                    <i className="fa-solid fa-pen-to-square ms-3 text-primary"></i>
+                    <i className="fa-solid fa-trash ms-3 text-danger"></i>
+                </th>);
+        }
+        fila.unshift(<td key={0}>{index}</td>);
+        return fila;
+    }
+    //Mirar como mejorar  dado que ahora no permite hasta el tercer hijo
+    const extractData = (itemTableStructure, itemData) => itemTableStructure.length === 2 ? itemData[itemTableStructure[0]][itemTableStructure[1]] : itemData[itemTableStructure[0]][itemTableStructure[1]][itemTableStructure[2]];
 
     return (
-        <Table striped size="sm">
+
+        <Table striped className='mt-3'>
             <thead>
                 <tr>
-                    {tableData.columns.map((item, index) =>
-                        <th key={index}>
-                            {item}
-                        </th>
-                    )}
+                    <th>#</th>
+                    {builderHeaderTable()}
                 </tr>
             </thead>
             <tbody>
-                {tableData.rows.map((item, index) =>
-                    <tr key={index}>
-                        {item.map((item_2, index_2) =>
-                            <td key={index_2}>
-                                {item_2}
-                            </td>)}
-                    </tr>
-                )}
+                {builderBodyTable()}
             </tbody>
         </Table>
     );
