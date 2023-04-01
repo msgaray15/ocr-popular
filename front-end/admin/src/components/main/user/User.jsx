@@ -5,22 +5,25 @@ import { defaultPageSize } from '../../../service/tools';
 import { getWithJWT } from '../../../service/methodAPI';
 import Loading from '../../Loading';
 import EmptyAnswer from '../../EmptyAnswer';
+import StackHeaderTableWithSearchFormSelect from '../../parcials/StackHeaderTableWithSearchFormSelect';
 
-const Vehicle = ({setBreadcrumb }) => {
+const User = ({ setBreadcrumb }) => {
     const [data, setData] = useState([]);
+    const [dataFormSelect, setDataFormSelect] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [changeInputSearch, setChangeInputSearch] = useState(false);
     const listTypeSearch = [
         {
             key: "",
             value: "Seleccionar"
         },
         {
-            key: "serial",
-            value: "Serial"
+            key: "email",
+            value: "Email"
         },
         {
-            key: "licensePlate",
-            value: "Placa"
+            key: "idRol",
+            value: "Rol"
         }
     ];
     const [form, setForm] = useState({
@@ -30,17 +33,33 @@ const Vehicle = ({setBreadcrumb }) => {
         textSearch: ""
     });
     const tableStructure = {
-        thead: ["Nombre", "Cedula", "Dirección", "Telefono"],
-        tbody: ["name", "identification", "address", "phone"]
+        thead: ["Nombre", "Cedula", "Dirección", "Telefono", "Rol", "Email"],
+        tbody: [["person", "name"], ["person", "identification"], ["person", "address"], ["person", "phone"], ["rol", "name"], "email"]
     };
-    const peopleRouter = "/api/vehicle";
+    const peopleRouter = "/api/user";
+    const rolRouter = "/api/rol";
 
     useEffect(() => {
         getWithJWTWithParams(form.page);
+        getWithJWT(rolRouter, sessionStorage.getItem('token'))
+            .then(response => {
+                if (response.status === 200) {
+                    setDataFormSelect(response.data.map((item) => {
+                        return {
+                            key: item.id,
+                            value: item.name
+                        }
+                    }));
+                } else {
+                    console.log("Error");
+                }
+            })
+            .catch(err => console.log(err));
     }, [form.page, form.pageSize]);
 
     const handleChange = (event) => {
         const { name, value } = event.target;
+        if (name === "typeSearch") setChangeInputSearch(name === "typeSearch" && value === "idRol");
         name === "pageSize" ? setForm({ ...form, [name]: value, page: 1 }) : setForm({ ...form, [name]: value });
     };
 
@@ -61,7 +80,6 @@ const Vehicle = ({setBreadcrumb }) => {
             .then(response => {
                 setLoading(false);
                 if (response.status === 200) {
-                    console.log("response.data: ",response.data);
                     setData(response.data);
                 } else {
                     console.log("Error");
@@ -72,18 +90,22 @@ const Vehicle = ({setBreadcrumb }) => {
 
     return (
         <div className="mx-4 my-3">
-            <StackHeaderTable title={"Vehiculos"} pages={data?.pages} router={"/vehicle"} setBreadcrumb={setBreadcrumb} handleChange={handleChange} formPageSize={form.pageSize} listTypeSearch={listTypeSearch} buttonSearch={buttonSearch} />
+            {changeInputSearch ?
+                <StackHeaderTableWithSearchFormSelect title={"Usuarios"} pages={data?.pages} router={"/users"} setBreadcrumb={setBreadcrumb} handleChange={handleChange} formPageSize={form.pageSize} buttonSearch={buttonSearch} dataFormSelect={dataFormSelect} />
+                :
+                <StackHeaderTable title={"Usuarios"} pages={data?.pages} router={"/users"} setBreadcrumb={setBreadcrumb} handleChange={handleChange} formPageSize={form.pageSize} listTypeSearch={listTypeSearch} buttonSearch={buttonSearch} />
+            }
             {loading ?
                 <Loading />
                 :
                 data?.pages?.totalRecords === 0 ?
                     <EmptyAnswer />
                     :
-                    <DynamicTable tableStructure={tableStructure} data={data?.list} routerActions={"/vehicle"} />
+                    <DynamicTable tableStructure={tableStructure} data={data?.list} routerActions={"/users"} />
             }
 
         </div>
     );
 }
 
-export default Vehicle;
+export default User;

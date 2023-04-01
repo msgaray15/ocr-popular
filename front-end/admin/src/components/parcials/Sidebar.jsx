@@ -44,6 +44,55 @@ const Sidebar = ({ show, onHide, setBreadcrumb }) => {
                         </Accordion.Body>
                     </Accordion.Item>
                     <Accordion.Item eventKey="1">
+                        <Accordion.Header><i className="fa-solid fa-address-book fa-lg me-3 text-success"></i><h6 className='m-auto ms-0 text-success'>Roles</h6></Accordion.Header>
+                        <Accordion.Body>
+                            <ListGroup variant="flush">
+                                <ListGroup.Item>
+                                    <Link to='/roles' className="text-success" onClick={() => onClickOption([{ route: "/roles", name: "Roles" }])}>
+                                        <i className="fa-solid fa-list me-3"></i>Listar
+                                    </Link>
+                                </ListGroup.Item>
+                            </ListGroup>
+                        </Accordion.Body>
+                    </Accordion.Item>
+                    <Accordion.Item eventKey="2">
+                        <Accordion.Header><i class="fa-solid fa-arrows-turn-to-dots me-3 text-success"></i><h6 className='m-auto ms-0 text-success'>Estados</h6></Accordion.Header>
+                        <Accordion.Body>
+                            <ListGroup variant="flush">
+                                <ListGroup.Item>
+                                    <Link to='/states' className="text-success" onClick={() => onClickOption([{ route: "/states", name: "Estados" }])}>
+                                        <i className="fa-solid fa-list me-3"></i>Listar
+                                    </Link>
+                                </ListGroup.Item>
+                            </ListGroup>
+                        </Accordion.Body>
+                    </Accordion.Item>
+                    <Accordion.Item eventKey="3">
+                        <Accordion.Header><i className="fa-solid fa-car  fa-lg me-3 text-success"></i><h6 className='m-auto ms-0 text-success'>Tipos de Vehiculos</h6></Accordion.Header>
+                        <Accordion.Body>
+                            <ListGroup variant="flush">
+                                <ListGroup.Item>
+                                    <Link to='/typeVehicles' className="text-success" onClick={() => onClickOption([{ route: "/typeVehicles", name: "Tipos de Vehiculo" }])}>
+                                        <i className="fa-solid fa-list me-3"></i>Listar
+                                    </Link>
+                                </ListGroup.Item>
+                            </ListGroup>
+                        </Accordion.Body>
+                    </Accordion.Item>
+                    <Accordion.Item eventKey="4">
+                        <Accordion.Header><i className="fa-solid fa-users fa-lg me-3 text-success"></i><h6 className='m-auto ms-0 text-success'>Usuarios</h6></Accordion.Header>
+                        <Accordion.Body>
+                            <ListGroup variant="flush">
+                                <ListGroup.Item>
+                                    <Link to='/users' className="text-success" onClick={() => onClickOption([{ route: "/users", name: "Usuarios" }])}><i className="fa-solid fa-list me-3"></i>Listar</Link>
+                                </ListGroup.Item>
+                                <ListGroup.Item><Link to='/createUsersPerson'><i className="fa-solid fa-plus me-3"></i>Crear</Link></ListGroup.Item>
+                                <ListGroup.Item><Link to='/'><i className="fa-solid fa-pen-to-square me-3"></i>Editar</Link></ListGroup.Item>
+                                <ListGroup.Item><i className="fa-solid fa-trash me-3"></i>Eliminar</ListGroup.Item>
+                            </ListGroup>
+                        </Accordion.Body>
+                    </Accordion.Item>
+                    <Accordion.Item eventKey="5">
                         <Accordion.Header><i className="fa-solid fa-car  fa-lg me-3 text-success"></i><h6 className='m-auto ms-0 text-success'>Vehiculos</h6></Accordion.Header>
                         <Accordion.Body>
                             <ListGroup variant="flush">
@@ -58,19 +107,6 @@ const Sidebar = ({ show, onHide, setBreadcrumb }) => {
                                     </Link>
                                 </ListGroup.Item>
                                 <ListGroup.Item><Link to='/' ><i className="fa-solid fa-pen-to-square me-3"></i>Editar</Link></ListGroup.Item>
-                                <ListGroup.Item><i className="fa-solid fa-trash me-3"></i>Eliminar</ListGroup.Item>
-                            </ListGroup>
-                        </Accordion.Body>
-                    </Accordion.Item>
-                    <Accordion.Item eventKey="2">
-                        <Accordion.Header><i className="fa-solid fa-users fa-lg me-3 text-success"></i><h6 className='m-auto ms-0 text-success'>Usuarios</h6></Accordion.Header>
-                        <Accordion.Body>
-                            <ListGroup variant="flush">
-                                <ListGroup.Item>
-                                    <Link to='/users' className="text-success" onClick={() => onClickOption([{ route: "/users", name: "Usuarios" }])}><i className="fa-solid fa-list me-3"></i>Listar</Link>
-                                </ListGroup.Item>
-                                <ListGroup.Item><Link to='/createUsersPerson'><i className="fa-solid fa-plus me-3"></i>Crear</Link></ListGroup.Item>
-                                <ListGroup.Item><Link to='/'><i className="fa-solid fa-pen-to-square me-3"></i>Editar</Link></ListGroup.Item>
                                 <ListGroup.Item><i className="fa-solid fa-trash me-3"></i>Eliminar</ListGroup.Item>
                             </ListGroup>
                         </Accordion.Body>

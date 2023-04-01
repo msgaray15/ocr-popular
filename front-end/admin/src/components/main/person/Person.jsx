@@ -5,7 +5,6 @@ import { defaultPageSize } from '../../../service/tools';
 import { getWithJWT } from '../../../service/methodAPI';
 import Loading from '../../Loading';
 import EmptyAnswer from '../../EmptyAnswer';
-import PaginationTables from '../../parcials/PaginationTables';
 
 const Person = ({ setBreadcrumb }) => {
     const [data, setData] = useState([]);
