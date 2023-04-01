@@ -111,12 +111,11 @@ public class UserAdapterImpl implements UserRepository {
     private Flux<UserModel> getListUserByTypeSearch(Integer page, Integer pageSize, String typeSearch, String search) {
         switch (typeSearch) {
             case "email":
-                return userReactiveRepository.findByEmail(search + '%', pageSize, page*pageSize);
+                return userReactiveRepository.findByEmail(search + '%', pageSize, page * pageSize);
             case "idRol":
-                Long idRol = Long. parseLong(search);
-                return userReactiveRepository.findByIdRol(idRol, pageSize, page*pageSize);
+                return userReactiveRepository.findByIdRol(Long.parseLong(search), pageSize, page * pageSize);
             default:
-                return userReactiveRepository.findAll(pageSize, page*pageSize);
+                return userReactiveRepository.findAll(pageSize, page * pageSize);
         }
     }
 
