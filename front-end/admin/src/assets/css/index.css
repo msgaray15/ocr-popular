@@ -11,3 +11,7 @@ a {
 .sizeInputFromPagination{
   width: 70px !important;
 }
+
+.heightCenter_vh_80{
+  height: 80vh;
+}

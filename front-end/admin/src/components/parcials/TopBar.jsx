@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 const TopBar = ({ handleShowMenu, nameUser }) => {
     return (
-        <Navbar className="bg-success p-0">
+        <Navbar className="bg-success p-0" sticky="top">
             <Navbar.Brand className="ps-4 text-light" onClick={handleShowMenu}><Link to={'/'}><strong className="text-white">OCR-POPULAR</strong></Link></Navbar.Brand>
             <Navbar.Toggle />
             <Navbar.Collapse className="justify-content-end">

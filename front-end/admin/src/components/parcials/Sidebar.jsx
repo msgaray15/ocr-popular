@@ -25,6 +25,18 @@ const Sidebar = ({ show, onHide, setBreadcrumb }) => {
             <Offcanvas.Body>
                 <Accordion flush={true}>
                     <Accordion.Item eventKey="0">
+                        <Accordion.Header><i class="fa-solid fa-gamepad fa-lg me-3 text-success"></i><h6 className='m-auto ms-0 text-success'>Control</h6></Accordion.Header>
+                        <Accordion.Body>
+                            <ListGroup variant="flush">
+                                <ListGroup.Item>
+                                    <Link to='/controls' className="text-success" onClick={() => onClickOption([{ route: "/controls", name: "Controles" }])}>
+                                        <i className="fa-solid fa-list me-3"></i>Listar
+                                    </Link>
+                                </ListGroup.Item>
+                            </ListGroup>
+                        </Accordion.Body>
+                    </Accordion.Item>
+                    <Accordion.Item eventKey="1">
                         <Accordion.Header><i className="fa-solid fa-person  fa-lg me-3 text-success"></i><h6 className='m-auto ms-0 text-success'>Personas</h6></Accordion.Header>
                         <Accordion.Body>
                             <ListGroup variant="flush">
@@ -43,7 +55,7 @@ const Sidebar = ({ show, onHide, setBreadcrumb }) => {
                             </ListGroup>
                         </Accordion.Body>
                     </Accordion.Item>
-                    <Accordion.Item eventKey="1">
+                    <Accordion.Item eventKey="2">
                         <Accordion.Header><i className="fa-solid fa-address-book fa-lg me-3 text-success"></i><h6 className='m-auto ms-0 text-success'>Roles</h6></Accordion.Header>
                         <Accordion.Body>
                             <ListGroup variant="flush">
@@ -55,7 +67,7 @@ const Sidebar = ({ show, onHide, setBreadcrumb }) => {
                             </ListGroup>
                         </Accordion.Body>
                     </Accordion.Item>
-                    <Accordion.Item eventKey="2">
+                    <Accordion.Item eventKey="3">
                         <Accordion.Header><i class="fa-solid fa-arrows-turn-to-dots me-3 text-success"></i><h6 className='m-auto ms-0 text-success'>Estados</h6></Accordion.Header>
                         <Accordion.Body>
                             <ListGroup variant="flush">
@@ -67,8 +79,8 @@ const Sidebar = ({ show, onHide, setBreadcrumb }) => {
                             </ListGroup>
                         </Accordion.Body>
                     </Accordion.Item>
-                    <Accordion.Item eventKey="3">
-                        <Accordion.Header><i className="fa-solid fa-car  fa-lg me-3 text-success"></i><h6 className='m-auto ms-0 text-success'>Tipos de Vehiculos</h6></Accordion.Header>
+                    <Accordion.Item eventKey="4">
+                        <Accordion.Header><i class="fa-solid fa-car-side fa-lg me-3 text-success"></i><h6 className='m-auto ms-0 text-success'>Tipos de Vehiculos</h6></Accordion.Header>
                         <Accordion.Body>
                             <ListGroup variant="flush">
                                 <ListGroup.Item>
@@ -76,10 +88,13 @@ const Sidebar = ({ show, onHide, setBreadcrumb }) => {
                                         <i className="fa-solid fa-list me-3"></i>Listar
                                     </Link>
                                 </ListGroup.Item>
+                                <ListGroup.Item><Link to='/createUsersPerson'><i className="fa-solid fa-plus me-3"></i>Crear</Link></ListGroup.Item>
+                                <ListGroup.Item><Link to='/'><i className="fa-solid fa-pen-to-square me-3"></i>Editar</Link></ListGroup.Item>
+                                <ListGroup.Item><i className="fa-solid fa-trash me-3"></i>Eliminar</ListGroup.Item>
                             </ListGroup>
                         </Accordion.Body>
                     </Accordion.Item>
-                    <Accordion.Item eventKey="4">
+                    <Accordion.Item eventKey="5">
                         <Accordion.Header><i className="fa-solid fa-users fa-lg me-3 text-success"></i><h6 className='m-auto ms-0 text-success'>Usuarios</h6></Accordion.Header>
                         <Accordion.Body>
                             <ListGroup variant="flush">
@@ -92,7 +107,7 @@ const Sidebar = ({ show, onHide, setBreadcrumb }) => {
                             </ListGroup>
                         </Accordion.Body>
                     </Accordion.Item>
-                    <Accordion.Item eventKey="5">
+                    <Accordion.Item eventKey="6">
                         <Accordion.Header><i className="fa-solid fa-car  fa-lg me-3 text-success"></i><h6 className='m-auto ms-0 text-success'>Vehiculos</h6></Accordion.Header>
                         <Accordion.Body>
                             <ListGroup variant="flush">

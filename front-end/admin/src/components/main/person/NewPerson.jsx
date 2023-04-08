@@ -1,10 +1,10 @@
 import { Button, Form, Card, Spinner } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import { post } from '../../service/methodAPI';
-import { emptyItemInTheForm } from '../../service/tools';
+import { post } from '../../../service/methodAPI';
+import { emptyItemInTheForm } from '../../../service/tools';
 
-const Register = ({ setPerson }) => {
+const NewPerson = () => {
     const [form, setForm] = useState({
         identification: "",
         name: "",
@@ -35,7 +35,8 @@ const Register = ({ setPerson }) => {
     const validateIdentification = (identification, sout) => {
         post(peopleRouter + "/existIdentification", identification)
             .then(response => {
-                if (response.status === 200 && response.data) sout.push("La identificación ya existe");
+                if(response.status != 200) sout.push("Error al verificar el documento");
+                if(response.status === 200 && response.data) sout.push("La identificación ya existe");
                 sout.length > 0 ? setMessenger(sout) : sendToPeople();
             })
             .catch(e => {
@@ -48,19 +49,16 @@ const Register = ({ setPerson }) => {
         setLoading(true)
         post(peopleRouter, form)
             .then(response => {
-                if (response.status === 200) {
-                    setPerson(response.data);
-                    navigate("/usersRegister");
-                }
+                setLoading(false);
+                response.status === 200 ? navigate("/people") : setMessenger(["Error server"]);
             })
     }
 
     return (
-        <div className='d-flex justify-content-center align-items-center vh-100'>
+        <div className='d-flex justify-content-center align-items-center heightCenter_vh_80'>
             <Card className='w-50'>
-                <Card.Header as="h5" className='bg-success text-center'>Estudiante</Card.Header>
                 <Card.Body>
-                    <Card.Title className='text-center'>Registrar</Card.Title>
+                    <Card.Title className='text-center mb-4'>Registrar</Card.Title>
                     <div className='d-flex flex-wrap justify-content-center'>
                         <div className='mx-3'>
                             <Form.Group className="mb-3">
@@ -94,7 +92,7 @@ const Register = ({ setPerson }) => {
                     </div>
                     <div className='text-end mt-2'>
                         <Link to='/'><Button variant="success mx-2">Cancelar</Button></Link>
-                        <Button variant="success mx-2" onClick={() => validate()}>Siguiente</Button>
+                        <Button variant="success mx-2" onClick={() => validate()}>Guardar</Button>
                     </div>
                 </Card.Body>
             </Card>
@@ -102,4 +100,4 @@ const Register = ({ setPerson }) => {
     );
 }
 
-export default Register;
+export default NewPerson;
