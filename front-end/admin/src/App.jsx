@@ -15,7 +15,8 @@ import TypeVehicle from './components/main/typeVehicle/TypeVehicle';
 import User from './components/main/user/User';
 import Control from './components/main/control/Control';
 import NewPerson from './components/main/person/NewPerson';
-
+import EditPerson from './components/main/person/EditPerson';
+import Delete from './components/Delete';
 
 
 function App() {
@@ -43,15 +44,17 @@ function App() {
       <DynamicBreadcrumb breadcrumb={breadcrumb} setBreadcrumb={setBreadcrumb} />
       <Routes>
         <Route exact path="/" element={<Index />} />
-        <Route path="/controls" element={<Control/>} />
+        <Route path="/controls" element={<Control />} />
         <Route path="/people" element={<Person setBreadcrumb={setBreadcrumb} />} />
         <Route path="/people/new" element={<NewPerson setBreadcrumb={setBreadcrumb} />} />
-        <Route path="/roles" element={<Rol/>} />
-        <Route path="/states" element={<State/>} />
-        <Route path="/typeVehicles" element={<TypeVehicle/>} />
+        <Route path="/people/edit" element={<EditPerson setBreadcrumb={setBreadcrumb} />} />
+        <Route path="/roles" element={<Rol />} />
+        <Route path="/states" element={<State />} />
+        <Route path="/typeVehicles" element={<TypeVehicle />} />
         <Route path="/users" element={<User setBreadcrumb={setBreadcrumb} />} />
         <Route path="/vehicles" element={<Vehicle setBreadcrumb={setBreadcrumb} />} />
-        <Route path="/vehicles/new" element={<NewVehicle />} />
+        <Route path="/vehicles/new" element={<NewVehicle setBreadcrumb={setBreadcrumb} />} />
+        <Route path='/delete' element={<Delete setBreadcrumb={setBreadcrumb}/>} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </>

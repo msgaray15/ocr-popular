@@ -1,10 +1,11 @@
 import { Button, Form, Card, Spinner } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
-import { post } from '../../../service/methodAPI';
+import { useState, useEffect } from 'react';
+import { put, getWithJWT } from '../../../service/methodAPI';
 import { emptyItemInTheForm } from '../../../service/tools';
 
-const NewPerson = ({ setBreadcrumb }) => {
+const EditPerson = ({ setBreadcrumb }) => {
+    const [id, setID] = useState();
     const [form, setForm] = useState({
         identification: "",
         name: "",
@@ -16,6 +17,24 @@ const NewPerson = ({ setBreadcrumb }) => {
     const navigate = useNavigate();
     const peopleRouter = "/api/person";
 
+    useEffect(() => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const id = urlParams.get('id');
+        id != null ? setID(id) : navigate("/people");
+        getWithJWT(peopleRouter + "/" + id, sessionStorage.getItem('token'))
+            .then(response => {
+                if (response.status === 200){
+                    setForm({
+                        identification: response.data.identification,
+                        name: response.data.name,
+                        address: response.data.address,
+                        phone: response.data.phone
+                    });
+                }
+            })
+            .catch(e => setMessenger(["Error server"]));
+    }, []);
+
     const handleChange = (event) => {
         if (messenger.length > 0) setMessenger([]);
         const { name, value } = event.target;
@@ -23,31 +42,16 @@ const NewPerson = ({ setBreadcrumb }) => {
     };
 
     const validate = () => {
-        let sout = [];
-        if (emptyItemInTheForm(form)) sout.push("Ningun campo puede estar vacio");
-        if (form.identification.length != 0) {
-            validateIdentification({ "identification": form.identification }, sout)
-        } else {
-            setMessenger(sout);
-        };
-    }
-
-    const validateIdentification = (identification, sout) => {
-        post(peopleRouter + "/existIdentification", identification)
-            .then(response => {
-                if(response.status != 200) sout.push("Error al verificar el documento");
-                if(response.status === 200 && response.data) sout.push("La identificación ya existe");
-                sout.length > 0 ? setMessenger(sout) : sendToPeople();
-            })
-            .catch(e => {
-                sout.push("Error al validar identificacion");
-                setMessenger(sout);
-            });
+        if (!emptyItemInTheForm(form)){
+            sendToPeople();
+        }else{
+            setMessenger(["Ningun campo puede estar vacio"]);
+        }
     }
 
     const sendToPeople = () => {
         setLoading(true)
-        post(peopleRouter, form)
+        put(peopleRouter + "/" + id, form, sessionStorage.getItem('token'))
             .then(response => {
                 setLoading(false);
                 setBreadcrumb([{ route: "/people", name: "Personas" }]);
@@ -56,8 +60,8 @@ const NewPerson = ({ setBreadcrumb }) => {
     }
 
     const onClickCancel = () => {
-        setBreadcrumb([{ route: "/", name: "Inicio" }]);
-        navigate("/");
+        setBreadcrumb([{ route: "/people", name: "Personas" }]);
+        navigate("/people");
     };
 
     return (
@@ -69,22 +73,22 @@ const NewPerson = ({ setBreadcrumb }) => {
                         <div className='mx-3'>
                             <Form.Group className="mb-3">
                                 <Form.Label>Identificación</Form.Label>
-                                <Form.Control type="text" placeholder="Ejem: 111111111" name='identification' onChange={handleChange} />
+                                <Form.Control type="text" placeholder="Ejem: 111111111" name='identification' onChange={handleChange} value={form.identification} disabled />
                             </Form.Group>
                             <Form.Group className="mb-3">
                                 <Form.Label>Telefono</Form.Label>
-                                <Form.Control type="text" name='phone' placeholder="1234567890" onChange={handleChange} />
+                                <Form.Control type="text" name='phone' placeholder="1234567890" onChange={handleChange} value={form.phone} />
                             </Form.Group>
                         </div>
                         <div className='mx-3'>
                             <Form.Group className="mb-3">
                                 <Form.Label>Nombre</Form.Label>
-                                <Form.Control type="text" name='name' placeholder="Ejem: Andres" onChange={handleChange} />
+                                <Form.Control type="text" name='name' placeholder="Ejem: Andres" onChange={handleChange} value={form.name}/>
                             </Form.Group>
 
                             <Form.Group className="mb-3">
                                 <Form.Label>Direccion</Form.Label>
-                                <Form.Control type="text" name='address' placeholder="Ejem: Carrera ##, ciudad, departamento" onChange={handleChange} />
+                                <Form.Control type="text" name='address' placeholder="Ejem: Carrera ##, ciudad, departamento" onChange={handleChange} value={form.address}/>
                             </Form.Group>
                         </div>
                     </div>
@@ -103,8 +107,8 @@ const NewPerson = ({ setBreadcrumb }) => {
                 </Card.Body>
             </Card>
         </div>
-        
+
     );
 }
 
-export default NewPerson;
+export default EditPerson;

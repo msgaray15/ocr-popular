@@ -46,3 +46,21 @@ export const post = async (route, form) => {
         data
     };
 }
+
+export const put = async (route, form, jwt) => {
+    const response = await fetch(BASE_URL + route, {
+        method: 'PUT',
+        mode: 'cors',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': jwt
+        },
+        body: JSON.stringify(form)
+    });
+    let data = await response.json();
+    response.status === 200 ? data = data.data : data = data.error;
+    return {
+        status: response.status,
+        data
+    };
+}

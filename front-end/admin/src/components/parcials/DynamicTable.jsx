@@ -1,6 +1,7 @@
 import { Table } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 
-const DynamicTable = ({ tableStructure, data, routerActions }) => {
+const DynamicTable = ({ tableStructure, data, router, title, setBreadcrumb }) => {
     /*
     const tableStructure ={
         thead:["Nombre","Cedula","Tipo de Documento","Correo","Dirección","Telefono","Rol"],
@@ -10,7 +11,7 @@ const DynamicTable = ({ tableStructure, data, routerActions }) => {
 
     const builderHeaderTable = () => {
         let headers = tableStructure?.thead?.map((item, i) => <th key={i + 1}>{item}</th>);
-        if (routerActions) {
+        if (router) {
             headers.push(<th key={0}>Acciones</th>);
         }
         return headers;
@@ -29,11 +30,11 @@ const DynamicTable = ({ tableStructure, data, routerActions }) => {
             );
         }
         );
-        if (routerActions) {
+        if (router) {
             fila.push(
                 <th key={tableStructure?.tbody?.length}>
-                    <i className="fa-solid fa-pen-to-square ms-3 text-primary"></i>
-                    <i className="fa-solid fa-trash ms-3 text-danger"></i>
+                    <Link to={router + "/edit?id=" + itemData.id} onClick={() => setBreadcrumb([{ route: router, name: title }, { route: "/edit", name: "Editar" }])}><i className="fa-solid fa-pen-to-square ms-3 text-success"></i></Link>
+                    <Link to="/delete"><i className="fa-solid fa-trash ms-3 text-success"></i></Link>
                 </th>);
         }
         fila.unshift(<td key={0}>{index}</td>);

@@ -12,6 +12,10 @@ a {
   width: 70px !important;
 }
 
-.heightCenter_vh_80{
-  height: 80vh;
+.heightCenter_vh_75{
+  height: 75vh;
+}
+
+.pagination {
+  --bs-pagination-active-bg: #198754 !important;
 }
