@@ -8,7 +8,8 @@ import reactor.core.publisher.Mono;
 
 // TODO: This file is just an example, you should delete or modify it
 public interface PersonReactiveRepository extends ReactiveCrudRepository<PersonModel, Long> {
-    Mono<PersonModel> findByIdentification(Long identification);
+    @Query(value="SELECT * FROM people p WHERE p.identification LIKE :identification")
+    Mono<PersonModel> findByIdentification(String identification);
     @Query(value="SELECT * FROM people p WHERE p.identification LIKE :identification LIMIT :pageSize OFFSET :page")
     Flux<PersonModel> findByIdentification(String identification, Integer pageSize, Integer page);
     @Query(value="SELECT COUNT(*) FROM people p WHERE p.identification LIKE :identification")
