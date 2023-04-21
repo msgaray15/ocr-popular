@@ -82,7 +82,7 @@ const Person = ({ setBreadcrumb }) => {
                 data?.pages?.totalRecords === 0 ?
                     <EmptyAnswer />
                     :
-                    <DynamicTable tableStructure={tableStructure} data={data?.list} router={"/people"} title={"Pesonas"} setBreadcrumb={setBreadcrumb}/>
+                    <DynamicTable tableStructure={tableStructure} data={data?.list} router={"/people"} title={"Pesonas"} setBreadcrumb={setBreadcrumb} backRouter={peopleRouter} />
             }
 
         </div>

@@ -1,7 +1,7 @@
 import { Table } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
-const DynamicTable = ({ tableStructure, data, router, title, setBreadcrumb }) => {
+const DynamicTable = ({ tableStructure, data, router, title, setBreadcrumb, backRouter }) => {
     /*
     const tableStructure ={
         thead:["Nombre","Cedula","Tipo de Documento","Correo","Dirección","Telefono","Rol"],
@@ -34,7 +34,7 @@ const DynamicTable = ({ tableStructure, data, router, title, setBreadcrumb }) =>
             fila.push(
                 <th key={tableStructure?.tbody?.length}>
                     <Link to={router + "/edit?id=" + itemData.id} onClick={() => setBreadcrumb([{ route: router, name: title }, { route: "/edit", name: "Editar" }])}><i className="fa-solid fa-pen-to-square ms-3 text-success"></i></Link>
-                    <Link to="/delete"><i className="fa-solid fa-trash ms-3 text-success"></i></Link>
+                    <Link to={"/delete?id=" + itemData.id + "&entity=" + title + "&router=" + router + "&backRouter=" + backRouter}><i className="fa-solid fa-trash ms-3 text-success"></i></Link>
                 </th>);
         }
         fila.unshift(<td key={0}>{index}</td>);

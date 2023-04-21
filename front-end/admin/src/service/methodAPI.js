@@ -64,3 +64,16 @@ export const put = async (route, form, jwt) => {
         data
     };
 }
+
+export const delet = async (route, jwt) => {
+    const response = await fetch(BASE_URL + route, {
+        method: 'DELETE',
+        mode: 'cors',
+        headers: {
+            'Authorization': jwt
+        }
+    });
+    return {
+        status: response.status
+    };
+}
