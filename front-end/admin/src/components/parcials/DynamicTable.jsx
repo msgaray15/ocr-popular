@@ -32,7 +32,7 @@ const DynamicTable = ({ tableStructure, data, router, title, setBreadcrumb, back
         );
         if (router) {
             fila.push(
-                <th key={tableStructure?.tbody?.length}>
+                <th key={tableStructure?.tbody?.length} className='table_column_actions'>
                     <Link to={router + "/edit?id=" + itemData.id} onClick={() => setBreadcrumb([{ route: router, name: title }, { route: "/edit", name: "Editar" }])}><i className="fa-solid fa-pen-to-square ms-3 text-success"></i></Link>
                     <Link to={"/delete?id=" + itemData.id + "&entity=" + title + "&router=" + router + "&backRouter=" + backRouter}><i className="fa-solid fa-trash ms-3 text-success"></i></Link>
                 </th>);
@@ -52,7 +52,7 @@ const DynamicTable = ({ tableStructure, data, router, title, setBreadcrumb, back
                     {builderHeaderTable()}
                 </tr>
             </thead>
-            <tbody>
+            <tbody className='table-group-divider'>
                 {builderBodyTable()}
             </tbody>
         </Table>
