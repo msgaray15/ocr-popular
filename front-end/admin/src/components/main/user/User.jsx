@@ -36,7 +36,7 @@ const User = ({ setBreadcrumb }) => {
         thead: ["Nombre", "Cedula", "Dirección", "Telefono", "Rol", "Email"],
         tbody: [["person", "name"], ["person", "identification"], ["person", "address"], ["person", "phone"], ["rol", "name"], "email"]
     };
-    const peopleRouter = "/api/user";
+    const userRouter = "/api/user";
     const rolRouter = "/api/rol";
 
     useEffect(() => {
@@ -74,7 +74,7 @@ const User = ({ setBreadcrumb }) => {
     }
     const getWithJWTWithParams = (formPage) => {
         setLoading(true);
-        let routerWithParams = peopleRouter + "?page=" + formPage + "&pageSize=" + form.pageSize;
+        let routerWithParams = userRouter + "?page=" + formPage + "&pageSize=" + form.pageSize;
         if (form.textSearch.length > 0) routerWithParams = routerWithParams + "&typeSearch=" + form.typeSearch + "&search=" + form.textSearch;
         getWithJWT(routerWithParams, sessionStorage.getItem('token'))
             .then(response => {
@@ -101,7 +101,7 @@ const User = ({ setBreadcrumb }) => {
                 data?.pages?.totalRecords === 0 ?
                     <EmptyAnswer />
                     :
-                    <DynamicTable tableStructure={tableStructure} data={data?.list} routerActions={"/users"} />
+                    <DynamicTable tableStructure={tableStructure} data={data?.list} router={"/users"} title={"Usuarios"} setBreadcrumb={setBreadcrumb} backRouter={userRouter} />
             }
 
         </div>
