@@ -17,6 +17,8 @@ import Control from './components/main/control/Control';
 import NewPerson from './components/main/person/NewPerson';
 import EditPerson from './components/main/person/EditPerson';
 import Delete from './components/Delete';
+import NewTypeVehicle from './components/main/typeVehicle/NewTypeVehicle';
+import EditTypeVehicle from './components/main/typeVehicle/EditTypeVehicle';
 
 
 function App() {
@@ -45,15 +47,24 @@ function App() {
       <Routes>
         <Route exact path="/" element={<Index />} />
         <Route path="/controls" element={<Control />} />
+
         <Route path="/people" element={<Person setBreadcrumb={setBreadcrumb} />} />
         <Route path="/people/new" element={<NewPerson setBreadcrumb={setBreadcrumb} />} />
         <Route path="/people/edit" element={<EditPerson setBreadcrumb={setBreadcrumb} />} />
+
         <Route path="/roles" element={<Rol />} />
+
         <Route path="/states" element={<State />} />
-        <Route path="/typeVehicles" element={<TypeVehicle />} />
+
+        <Route path="/typeVehicles" element={<TypeVehicle setBreadcrumb={setBreadcrumb} />} />
+        <Route path="/typeVehicles/new" element={<NewTypeVehicle setBreadcrumb={setBreadcrumb} />} />
+        <Route path="/typeVehicles/edit" element={<EditTypeVehicle setBreadcrumb={setBreadcrumb} />} />
+
         <Route path="/users" element={<User setBreadcrumb={setBreadcrumb} />} />
+
         <Route path="/vehicles" element={<Vehicle setBreadcrumb={setBreadcrumb} />} />
         <Route path="/vehicles/new" element={<NewVehicle setBreadcrumb={setBreadcrumb} />} />
+
         <Route path='/delete' element={<Delete setBreadcrumb={setBreadcrumb}/>} />
         <Route path="*" element={<NotFound />} />
       </Routes>
