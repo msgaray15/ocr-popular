@@ -19,3 +19,7 @@ a {
 .pagination {
   --bs-pagination-active-bg: #198754 !important;
 }
+
+.table_column_actions{
+  width: 120px;
+}
