@@ -23,3 +23,6 @@ a {
 .table_column_actions{
   width: 120px;
 }
+.tbody-select:hover{
+  background-color: #198754;
+}
