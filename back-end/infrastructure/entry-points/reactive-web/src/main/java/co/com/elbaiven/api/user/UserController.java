@@ -40,7 +40,7 @@ public class UserController {
                 .map(ResponseAPI::getResponseAPI);
     }
 
-    @PostMapping()
+    @PostMapping
     public Mono<ResponseAPI> create(@RequestBody UserRQ userRQ) {
         loggerMessage.loggerInfo("Create: " + userRQ.toString());
         return userUseCase.create(toUser(userRQ))
@@ -51,7 +51,8 @@ public class UserController {
     public Mono<ResponseAPI> update(@PathVariable("id") Long id, @RequestBody UserRQ userRQ) {
         loggerMessage.loggerInfo("Update: " + userRQ.toString());
         return userUseCase.update(id, toUser(userRQ))
-                .map(ResponseAPI::getResponseAPI);
+                        .map(ResponseAPI::getResponseAPI);
+
     }
 
     @DeleteMapping("{id}")

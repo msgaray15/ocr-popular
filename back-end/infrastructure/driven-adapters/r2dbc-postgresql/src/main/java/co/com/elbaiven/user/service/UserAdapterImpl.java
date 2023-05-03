@@ -67,6 +67,14 @@ public class UserAdapterImpl implements UserRepository {
                 .defaultIfEmpty(false);
     }
 
+    public Mono<User> update(Long id, Long idRol, String email) {
+        return userReactiveRepository.update(idRol, email, id)
+                .map((e) -> toUser(e))
+                .doOnError(err -> {
+                    throw new ErrorException("400", err.getMessage());
+                });
+    }
+
     public Mono<User> update(Long id, User user) {
         user.setId(id);
         return userReactiveRepository.save(toUserModel(user))

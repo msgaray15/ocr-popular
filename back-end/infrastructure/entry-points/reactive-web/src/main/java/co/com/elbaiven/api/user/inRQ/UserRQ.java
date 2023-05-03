@@ -1,6 +1,8 @@
 package co.com.elbaiven.api.user.inRQ;
 
 import lombok.Data;
+import lombok.NonNull;
+import reactor.util.annotation.Nullable;
 
 @Data
 public class UserRQ {

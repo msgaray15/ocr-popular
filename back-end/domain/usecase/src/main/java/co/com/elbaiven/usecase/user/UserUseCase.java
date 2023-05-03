@@ -24,7 +24,10 @@ public class UserUseCase {
     }
 
     public Mono<User> update(Long id, User user) {
-        return userRepository.update(id, user);
+        return user.getPassword() == null ?
+                userRepository.update(id, user.getIdRol(), user.getEmail())
+                :
+                userRepository.update(id, user);
     }
 
     public Mono<Void> delete(Long id) {
@@ -51,12 +54,12 @@ public class UserUseCase {
         return userRepository.existEmail(email);
     }
 
-    private Mono<Long> getCount( String typeSearch, String search){
+    private Mono<Long> getCount(String typeSearch, String search) {
         switch (typeSearch) {
             case "email":
                 return userRepository.countFindByEmail(search + '%');
             case "idRol":
-                return userRepository.countFindByIdRol(Long. parseLong(search));
+                return userRepository.countFindByIdRol(Long.parseLong(search));
             default:
                 return userRepository.count();
         }

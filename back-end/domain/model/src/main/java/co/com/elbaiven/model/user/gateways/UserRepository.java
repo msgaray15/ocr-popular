@@ -11,7 +11,8 @@ public interface UserRepository {
     Mono<UserComplete> read(Long id);
     Mono<Login> login(String email, String password);
     Mono<Boolean> existEmail(String email);
-    Mono<User> update(Long id,User User);
+    Mono<User> update(Long id, User User);
+    Mono<User> update(Long id, Long idRol, String email);
     Mono<Void> delete(Long id);
     Mono<Long> count();
     Flux<UserComplete> getAll(Integer page, Integer pageSize, String typeSearch, String search);
