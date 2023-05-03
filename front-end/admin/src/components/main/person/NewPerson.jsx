@@ -1,6 +1,6 @@
 import { Button, Form, Card, Spinner } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { post } from '../../../service/methodAPI';
 import { emptyItemInTheForm } from '../../../service/tools';
 
@@ -11,10 +11,17 @@ const NewPerson = ({ setBreadcrumb }) => {
         address: "",
         phone: ""
     });
+    const [returnParent, setReturnParent] = useState(false);
     const [messenger, setMessenger] = useState([]);
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const peopleRouter = "/api/person";
+
+    useEffect(() => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const returnParent = urlParams.get('returnParent');
+        if (returnParent != null) setReturnParent(returnParent);
+    }, []);
 
     const handleChange = (event) => {
         if (messenger.length > 0) setMessenger([]);
@@ -56,8 +63,12 @@ const NewPerson = ({ setBreadcrumb }) => {
     }
 
     const onClickCancel = () => {
-        setBreadcrumb([{ route: "/", name: "Inicio" }]);
-        navigate("/");
+        if(!returnParent){
+            setBreadcrumb([{ route: "/people", name: "Personas" }]);
+            navigate("/people");
+        }else{
+            navigate(-1);
+        }
     };
 
     return (
