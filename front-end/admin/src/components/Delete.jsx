@@ -54,7 +54,7 @@ const Delete = ({ setBreadcrumb }) => {
             </Modal.Header>
             <Modal.Body>
                 <p>
-                    Estas seguro de Elimar: <br />
+                    Estas seguro de Eliminar: <br />
                     <pre className='d-inline'>&#09;</pre>{text}
                 </p>
                 <div className='mx-3 text-center'>
