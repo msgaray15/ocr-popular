@@ -123,8 +123,6 @@ const Sidebar = ({ show, onHide, setBreadcrumb }) => {
                                         <i className="fa-solid fa-plus me-3"></i>Crear
                                     </Link>
                                 </ListGroup.Item>
-                                <ListGroup.Item><Link to='/' ><i className="fa-solid fa-pen-to-square me-3"></i>Editar</Link></ListGroup.Item>
-                                <ListGroup.Item><i className="fa-solid fa-trash me-3"></i>Eliminar</ListGroup.Item>
                             </ListGroup>
                         </Accordion.Body>
                     </Accordion.Item>

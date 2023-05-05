@@ -57,8 +57,16 @@ const NewPerson = ({ setBreadcrumb }) => {
         post(peopleRouter, form)
             .then(response => {
                 setLoading(false);
-                setBreadcrumb([{ route: "/people", name: "Personas" }]);
-                response.status === 200 ? navigate("/people") : setMessenger(["Error server"]);
+                if(response.status === 200){
+                    if(!returnParent){
+                        setBreadcrumb([{ route: "/people", name: "Personas" }]);
+                        navigate("/people");
+                    }else{
+                        navigate(-1);
+                    }
+                }else{
+                    setMessenger(["Error server"]);
+                }
             })
     }
 

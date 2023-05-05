@@ -12,6 +12,7 @@ const NewUser = ({ setBreadcrumb }) => {
         email: "",
         password: ""
     });
+    const [returnParent, setReturnParent] = useState(false);
     const [listRol, setListRol] = useState([]);
     const [textPerson, setTextPerson] = useState("Seleccionar");
     const [modalShow, setModalShow] = useState(false);
@@ -27,6 +28,8 @@ const NewUser = ({ setBreadcrumb }) => {
         if (idPerson != null); setForm({ ...form, "idPerson": idPerson });
         const personIdentification = urlParams.get('personIdentification');
         const personName = urlParams.get('personName');
+        const returnParent = urlParams.get('returnParent');
+        if (returnParent != null) setReturnParent(returnParent);
         if (personIdentification != null && personName != null) setTextPerson(personName + " - " + personIdentification);
         getWithJWT(rolRouter, sessionStorage.getItem('token'))
             .then(response => {
@@ -57,8 +60,12 @@ const NewUser = ({ setBreadcrumb }) => {
             .then(response => {
                 setLoading(false);
                 if (response.status === 200) {
-                    setBreadcrumb([{ route: "/users", name: "Usuarios" }]);
-                    navigate("/users");
+                    if (!returnParent) {
+                        setBreadcrumb([{ route: "/users", name: "Usuarios" }]);
+                        navigate("/users");
+                    } else {
+                        navigate(-1);
+                    }
                 } else {
                     setMessenger(["Error server"]);
                 }
@@ -67,15 +74,20 @@ const NewUser = ({ setBreadcrumb }) => {
     }
 
     const onClickCancel = () => {
-        setBreadcrumb([{ route: "/users", name: "Usuarios" }]);
-        navigate("/users");
+
+        if (!returnParent) {
+            setBreadcrumb([{ route: "/users", name: "Usuarios" }]);
+            navigate("/users");
+        } else {
+            navigate(-1);
+        }
     };
 
     return (
         <div className='d-flex justify-content-center align-items-center heightCenter_vh_75'>
             <Card className='w-50 border-0'>
                 <Card.Body>
-                    <Card.Title className='text-center mb-4'>Editar</Card.Title>
+                    <Card.Title className='text-center mb-4'>Registrar</Card.Title>
                     <div className='d-flex flex-wrap justify-content-center'>
                         <div className='mx-3'>
                             <Form.Group className="mb-3">

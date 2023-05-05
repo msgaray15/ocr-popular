@@ -6,7 +6,7 @@ import { getWithJWT } from '../../../service/methodAPI';
 import Loading from '../../Loading';
 import EmptyAnswer from '../../EmptyAnswer';
 
-const Vehicle = ({setBreadcrumb }) => {
+const Vehicle = ({ setBreadcrumb }) => {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(false);
     const listTypeSearch = [
@@ -30,10 +30,10 @@ const Vehicle = ({setBreadcrumb }) => {
         textSearch: ""
     });
     const tableStructure = {
-        thead: ["Nombre", "Cedula", "Dirección", "Telefono"],
-        tbody: ["name", "identification", "address", "phone"]
+        thead: ["Placa", "Serial", "Tipo de carro", "Usuario", "Identificacion", "Rol"],
+        tbody: ["licensePlate", "serial", ["typeVehicle", "name"], ["user", "person", "name"], ["user", "person", "identification"], ["user","rol", "name"]]
     };
-    const peopleRouter = "/api/vehicle";
+    const vehicleRouter = "/api/vehicle";
 
     useEffect(() => {
         getWithJWTWithParams(form.page);
@@ -55,13 +55,13 @@ const Vehicle = ({setBreadcrumb }) => {
     }
     const getWithJWTWithParams = (formPage) => {
         setLoading(true);
-        let routerWithParams = peopleRouter + "?page=" + formPage + "&pageSize=" + form.pageSize;
+        let routerWithParams = vehicleRouter + "?page=" + formPage + "&pageSize=" + form.pageSize;
         if (form.textSearch.length > 0) routerWithParams = routerWithParams + "&typeSearch=" + form.typeSearch + "&search=" + form.textSearch;
         getWithJWT(routerWithParams, sessionStorage.getItem('token'))
             .then(response => {
                 setLoading(false);
                 if (response.status === 200) {
-                    console.log("response.data: ",response.data);
+                    console.log("response.data: ", response.data);
                     setData(response.data);
                 } else {
                     console.log("Error");
@@ -72,14 +72,14 @@ const Vehicle = ({setBreadcrumb }) => {
 
     return (
         <div className="mx-4 my-3">
-            <StackHeaderTable title={"Vehiculos"} pages={data?.pages} router={"/vehicle"} setBreadcrumb={setBreadcrumb} handleChange={handleChange} formPageSize={form.pageSize} listTypeSearch={listTypeSearch} buttonSearch={buttonSearch} />
+            <StackHeaderTable title={"Vehiculos"} pages={data?.pages} router={"/vehicles"} setBreadcrumb={setBreadcrumb} handleChange={handleChange} formPageSize={form.pageSize} listTypeSearch={listTypeSearch} buttonSearch={buttonSearch} />
             {loading ?
                 <Loading />
                 :
                 data?.pages?.totalRecords === 0 ?
                     <EmptyAnswer />
                     :
-                    <DynamicTable tableStructure={tableStructure} data={data?.list} routerActions={"/vehicle"} />
+                    <DynamicTable tableStructure={tableStructure} data={data?.list} router={"/vehicles"} title={"Vehiculos"} setBreadcrumb={setBreadcrumb} backRouter={vehicleRouter}/>
             }
 
         </div>

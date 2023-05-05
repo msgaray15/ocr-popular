@@ -1,46 +1,126 @@
-import { Button, Form, FormControl, FormGroup} from "react-bootstrap";
-import '../../../assets/css/index.css'
+import { Button, Form, Card, Spinner } from 'react-bootstrap';
+import { useNavigate, Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { postWithJWT, getWithJWT } from '../../../service/methodAPI';
+import { emptyItemInTheForm } from '../../../service/tools';
+import ModalSelectUser from './ModalSelectUser';
 
-const NewVehicle = () => {
+const NewVehicle = ({ setBreadcrumb }) => {
+
+    const [form, setForm] = useState({
+        serial: "",
+        idTypeVehicle: "",
+        licensePlate: "",
+        idUser: ""
+    });
+    const [listTipoVehicle, setListTipoVehicle] = useState([]);
+    const [textUser, setTextUser] = useState("Seleccionar");
+    const [modalShow, setModalShow] = useState(false);
+    const [messenger, setMessenger] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
+    const vehicleRouter = "/api/vehicle";
+    const tipoVehicleRouter = "/api/typeVehicle";
+
+    useEffect(() => {
+        getWithJWT(tipoVehicleRouter, sessionStorage.getItem('token'))
+            .then(response => {
+                if (response.status === 200) {
+                    setListTipoVehicle(response.data);
+                }
+            })
+            .catch(e => setMessenger(["Error server"]));
+    }, []);
+
+    const handleChange = (event) => {
+        if (messenger.length > 0) setMessenger([]);
+        const { name, value } = event.target;
+        setForm({ ...form, [name]: value });
+    };
+
+    const validate = () => {
+        if (!emptyItemInTheForm(form)) {
+            sendToVehicles();
+        } else {
+            setMessenger(["Ningun campo puede estar vacio"]);
+        }
+    }
+
+    const sendToVehicles = () => {
+        setLoading(true);
+        postWithJWT(vehicleRouter, form, sessionStorage.getItem('token'))
+            .then(response => {
+                setLoading(false);
+                if (response.status === 200) {
+                    setBreadcrumb([{ route: "/Vehicles", name: "Vehiculos" }]);
+                    navigate("/Vehicles");
+                } else {
+                    setMessenger(["Error server"]);
+                }
+            })
+            .catch(e => setMessenger(["Error server"]));
+    }
+
+
+    const onClickCancel = () => {
+        setBreadcrumb([{ route: "/Vehicles", name: "Vehiculos" }]);
+        navigate("/Vehicles");
+    };
+
     return (
-        <div className="row m-3">
-             
-            <div className="col-center">
-               
-                <Form>
-                <h3>Register Vehicle</h3>
-                <br></br>
-                    <Form.Label className="ms-3">Identification</Form.Label>
-                    <Form.Group className="ms-4">
-                        <Form.Control type="text" placeholder="Enter identification" className="w-auto min-vw-50 d-inline" />
-                        <Button className="ms-3 align-top bg-success"  >Submit</Button>
-                       
-                    </Form.Group>
-                    <FormGroup className="ms-4">
-                        <Form.Label>verification code email </Form.Label>
-                        <FormControl type="text" placeholder="Enter code"  />
-                    </FormGroup>
-                    <Form.Group className="ms-4">
-                    <Form.Label>Type vehicle</Form.Label>
-                        <Form.Select >
-                            <option>first type</option>
-                       </Form.Select>
-                    </Form.Group>
-                    <FormGroup className="ms-4">
-                        <Form.Label>License plate</Form.Label>
-                        <FormControl type="text" placeholder="Enter license plate"  />
-                    </FormGroup>
-                    <br></br>
-                    <Button className="ms-3 align-top bg-success"  type="submit">
-                            Register Vehicle
-                    </Button>
-                    <Button className="ms-3 align-top" variant="danger" type="submit">
-                            Cancel
-                    </Button>
+        <div className='d-flex justify-content-center align-items-center heightCenter_vh_75'>
+            <Card className='w-50 border-0'>
+                <Card.Body>
+                    <Card.Title className='text-center mb-4'>Registrar</Card.Title>
+                    <div className='d-flex flex-wrap justify-content-center'>
+                        <div className='mx-3'>
+                            <Form.Group className="mb-3">
+                                <Form.Label>Número de serie</Form.Label>
+                                <Form.Control type="text" placeholder="Ejem: 1A2B3C" name='serial' onChange={handleChange} />
+                            </Form.Group>
+                            <Form.Group className="mb-3">
+                                <Form.Label>Tipo de Vehiculo</Form.Label>
+                                <Link to={"/typeVehicles/new?returnParent=" + true} className="text-success"><i className="fa-solid fa-plus ms-3 text-success"></i></Link>
+                                <Form.Select name='idTypeVehicle' onChange={handleChange}>
+                                    <option key={0} value={""}>Seleccionar</option>
+                                    {listTipoVehicle?.map((item, i) => <option key={i} value={item.id}>{item.name}</option>)}
+                                </Form.Select>
+                            </Form.Group>
+                        </div>
+                        <div className='mx-3'>
+                            <Form.Group className="mb-3">
+                                <Form.Label>Placa</Form.Label>
+                                <Form.Control type="text" name='licensePlate' placeholder="Ejem: AAA-000" onChange={handleChange} />
+                            </Form.Group>
 
-                </Form>
-              
-            </div>
+                            <Form.Group className="mb-3">
+                                <Form.Label>Usuario</Form.Label>
+                                <Link to={"/users/new?returnParent=" + true} className="text-success"><i className="fa-solid fa-plus ms-3 text-success"></i></Link>
+                                <Form.Control type="text" name='idUser' onClick={() => setModalShow(true)} value={textUser} />
+                            </Form.Group>
+                        </div>
+                    </div>
+                    <div className='mx-3 text-center'>
+                        {messenger.map((item, i) => <h6 key={i} className='text-danger'>{item}</h6>)}
+                        {loading ?
+                            <Spinner animation="border" variant="info" />
+                            :
+                            ""
+                        }
+                    </div>
+                    <div className='text-end mt-3'>
+                        <Button variant="success mx-2" onClick={() => onClickCancel()}>Cancelar</Button>
+                        <Button variant="success mx-2" onClick={() => validate()}>Guardar</Button>
+                    </div>
+                </Card.Body>
+            </Card>
+            <ModalSelectUser
+                show={modalShow}
+                onHide={() => setModalShow(false)}
+                setFormUser={setForm}
+                formUser={form}
+                setTextUser={setTextUser}
+            />
         </div>
     );
 }

@@ -1,6 +1,6 @@
 import { Button, Form, Card, Spinner } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { postWithJWT } from '../../../service/methodAPI';
 import { emptyItemInTheForm } from '../../../service/tools';
 
@@ -8,10 +8,17 @@ const NewTypeVehicle = ({ setBreadcrumb }) => {
     const [form, setForm] = useState({
         name: ""
     });
+    const [returnParent, setReturnParent] = useState(false);
     const [messenger, setMessenger] = useState([]);
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const typeVehicleRouter = "/api/typeVehicle";
+
+    useEffect(() => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const returnParent = urlParams.get('returnParent');
+        if (returnParent != null) setReturnParent(returnParent);
+    }, []);
 
     const handleChange = (event) => {
         if (messenger.length > 0) setMessenger([]);
@@ -38,8 +45,12 @@ const NewTypeVehicle = ({ setBreadcrumb }) => {
     }
 
     const onClickCancel = () => {
-        setBreadcrumb([{ route: "/typeVehicles", name: "Tipos de Vehiculos" }]);
-        navigate("/typeVehicles");
+        if (!returnParent) {
+            setBreadcrumb([{ route: "/typeVehicles", name: "Tipos de Vehiculos" }]);
+            navigate("/typeVehicles");
+        } else {
+            navigate(-1);
+        }
     };
 
     return (
