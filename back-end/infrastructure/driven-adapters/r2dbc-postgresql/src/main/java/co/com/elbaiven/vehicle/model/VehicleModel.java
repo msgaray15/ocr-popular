@@ -17,10 +17,10 @@ public class VehicleModel {
     private Long id;
     @Column("serial")
     private String serial;
-    @Column("idTipoVehicle")
+    @Column("id_tipo_vehicle")
     private Long idTypeVehicle;
-    @Column("licensePlate")
+    @Column("license_plate")
     private String licensePlate;
-    @Column("idUser")
+    @Column("id_user")
     private Long idUser;
 }
