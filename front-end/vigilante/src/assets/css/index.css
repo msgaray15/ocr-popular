@@ -1,0 +1,28 @@
+.col-center{
+
+  justify-content: center;
+  width: 700px;
+}
+
+a {
+  text-decoration: none !important;
+}
+
+.sizeInputFromPagination{
+  width: 70px !important;
+}
+
+.heightCenter_vh_75{
+  height: 75vh;
+}
+
+.pagination {
+  --bs-pagination-active-bg: #198754 !important;
+}
+
+.table_column_actions{
+  width: 120px;
+}
+.tbody-select:hover{
+  background-color: #198754;
+}
