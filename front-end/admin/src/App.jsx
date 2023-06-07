@@ -21,6 +21,7 @@ import NewTypeVehicle from './components/main/typeVehicle/NewTypeVehicle';
 import EditTypeVehicle from './components/main/typeVehicle/EditTypeVehicle';
 import EditUser from './components/main/user/EditUser';
 import NewUser from './components/main/user/NewUser';
+import EditVehicle from './components/main/vehicle/EditVehicle';
 
 
 function App() {
@@ -68,6 +69,7 @@ function App() {
 
         <Route path="/vehicles" element={<Vehicle setBreadcrumb={setBreadcrumb} />} />
         <Route path="/vehicles/new" element={<NewVehicle setBreadcrumb={setBreadcrumb} />} />
+        <Route path="/vehicles/edit" element={<EditVehicle setBreadcrumb={setBreadcrumb} />} />
 
         <Route path='/delete' element={<Delete setBreadcrumb={setBreadcrumb} />} />
         <Route path="*" element={<NotFound />} />
