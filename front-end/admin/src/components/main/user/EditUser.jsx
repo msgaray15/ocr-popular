@@ -6,6 +6,7 @@ import { emptyItemInTheForm } from '../../../service/tools';
 
 const EditUser = ({ setBreadcrumb }) => {
     const [id, setID] = useState();
+    const [returnParent, setReturnParent] = useState(false);
     const [form, setForm] = useState({
         idPerson: "",
         idRol: "",
@@ -23,6 +24,8 @@ const EditUser = ({ setBreadcrumb }) => {
     useEffect(() => {
         const urlParams = new URLSearchParams(window.location.search);
         const id = urlParams.get('id');
+        const returnParent = urlParams.get('returnParent');
+        if (returnParent != null) setReturnParent(returnParent);
         id != null ? setID(id) : navigate("/users");
         getWithJWT(userRouter + "/" + id, sessionStorage.getItem('token'))
             .then(response => {
@@ -73,8 +76,8 @@ const EditUser = ({ setBreadcrumb }) => {
     }
 
     const onClickCancel = () => {
-        setBreadcrumb([{ route: "/users", name: "Usuarios" }]);
-        navigate("/users");
+        if(!returnParent) setBreadcrumb([{ route: "/users", name: "Usuarios" }]);
+        navigate(-1);
     };
 
 
