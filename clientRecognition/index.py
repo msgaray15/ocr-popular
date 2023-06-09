@@ -78,8 +78,17 @@ while cv2.waitKey(1) != 27:  # exit by pressing Esc
         if (len(texto) >= 6):
             placaText = texto[0:6]
             print(placaText)
-            # payload = {'placaText': placaText,'state':'inpt'}
-            # r = requests.post('https://miapi.com/comentarios/', json=payload) 
+            payload = {
+                'placa': placaText,
+                'state': 'inpt'
+            }
+            headers = {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiJhc2FyYWJpYXMiLCJzdWIiOiJhc2FyYWJpYXNAdW5pY2VzYXIuZWR1LmNvIiwiYXV0aG9yaXRpZXMiOlsiQWRtaW5pc3RyYWRvciJdLCJkYXRhIjp7ImlkIjoxLCJwZXJzb24iOnsiaWQiOjEsImlkZW50aWZpY2F0aW9uIjoxMDA3MzY5OTUyLCJuYW1lIjoiQWJyYWhhbSBTYXJhYmlhIHBydWViYSIsInBob25lIjozMTU4ODk2MDk4LCJhZGRyZXNzIjoiYWd1YXMgYmxhbmNhcyJ9LCJyb2wiOnsiaWQiOjEsIm5hbWUiOiJBZG1pbmlzdHJhZG9yIn0sImVtYWlsIjoiYXNhcmFiaWFzQHVuaWNlc2FyLmVkdS5jbyJ9LCJpYXQiOjE2ODYyODA3MjYsImV4cCI6MTY4NjMyMzkyNn0.M-5ntK73bm1BExRQupPtJAQJg1MiNZEFmpV_mMgO2ikb_vfqgS3di9YEWxG2212lHpdjOjrajf7mkgdBs-2DUA'
+            }
+            r = requests.post(
+                'http://localhost:8080/api/control/exist', json=payload, headers=headers)
+            print(r)
             # cv2.imshow("Placa: ",placa_moothing_edge)
             # draw the rectangular outline "the plate"
             draw.contours(area_interest, candidates, -1, (1, 2, 255), 2)
