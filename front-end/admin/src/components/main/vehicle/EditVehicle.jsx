@@ -30,7 +30,7 @@ const EditVehicle = ({ setBreadcrumb }) => {
                     setUser(response.data.user.person.identification + " - " + response.data.user.person.name);
                     setForm({
                         serial: response.data.serial,
-                        idTypeVehicle: response.data.typeVehicle.name,
+                        idTypeVehicle: response.data.typeVehicle.id,
                         licensePlate: response.data.licensePlate,
                         idUser: response.data.user.id
                     });
@@ -54,7 +54,6 @@ const EditVehicle = ({ setBreadcrumb }) => {
     };
 
     const validate = () => {
-        if (form.password.length === 0) delete form.password;
         if (!emptyItemInTheForm(form)) {
             sendToVehicle();
         } else {
@@ -73,7 +72,7 @@ const EditVehicle = ({ setBreadcrumb }) => {
     }
 
     const onClickCancel = () => {
-        setBreadcrumb([{ route: "/users", name: "Usuarios" }]);
+        setBreadcrumb([{ route: "/vehicles", name: "Vehiculos" }]);
         navigate("/vehicles");
     };
 
