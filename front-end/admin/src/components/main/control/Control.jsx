@@ -37,8 +37,8 @@ const Control = () => {
         textSearch: ""
     });
     const tableStructure = {
-        thead: ["Nombre", "Cedula", "Dirección", "Telefono", "Rol", "Email"],
-        tbody: [["person", "name"], ["person", "identification"], ["person", "address"], ["person", "phone"], ["rol", "name"], "email"]
+        thead: ["Fecha", "Estado", "Placa", "Serial", "tipo de vehiculo", "Usuario"],
+        tbody: ["date", ["state", "name"], ["vehicle", "licensePlate"], ["vehicle", "serial"], ["vehicle", "typeVehicle","name"], ["vehicle", "user","person","name"]]
     };
     const controlRouter = "/api/control";
     const stateRouter = "/api/state";
