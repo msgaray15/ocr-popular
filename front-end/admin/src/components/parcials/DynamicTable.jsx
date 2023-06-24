@@ -41,8 +41,8 @@ const DynamicTable = ({ tableStructure, data, router, title, setBreadcrumb, back
         return fila;
     }
     //Mirar como mejorar  dado que ahora no permite hasta el tercer hijo
-    const extractData = (itemTableStructure, itemData) => itemTableStructure.length === 2 ? itemData[itemTableStructure[0]][itemTableStructure[1]] : itemData[itemTableStructure[0]][itemTableStructure[1]][itemTableStructure[2]];
-
+    const extractData = (itemTableStructure, itemData) => itemTableStructure.length === 2 ? itemData[itemTableStructure[0]][itemTableStructure[1]] : extractDataHigher3(itemTableStructure, itemData);
+    const extractDataHigher3 = (itemTableStructure, itemData) => itemTableStructure.length === 3 ? itemData[itemTableStructure[0]][itemTableStructure[1]][itemTableStructure[2]]: itemData[itemTableStructure[0]][itemTableStructure[1]][itemTableStructure[2]][itemTableStructure[3]];
     return (
 
         <Table striped className='mt-3'>
