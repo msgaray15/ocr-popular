@@ -15,12 +15,12 @@ public interface ControlReactiveRepository extends ReactiveCrudRepository<Contro
     Mono<Long> countFindByDate(String date);
     @Query(value="SELECT * FROM controls LIMIT :pageSize OFFSET :page")
     Flux<ControlModel> findAll(Integer pageSize, Integer page);
-    @Query(value="SELECT * FROM controls c  WHERE c.id_state LIKE :idState LIMIT :pageSize OFFSET :page")
+    @Query(value="SELECT * FROM controls c  WHERE c.id_state = :idState LIMIT :pageSize OFFSET :page")
     Flux<ControlModel> findByIdState(Long idState, Integer pageSize, Integer page);
-    @Query(value="SELECT COUNT(*) FROM controls c  WHERE c.idState  LIKE :idState")
+    @Query(value="SELECT COUNT(*) FROM controls c  WHERE c.id_state = :idState")
     Mono<Long> countFindByIdState(Long idState);
-    @Query(value="SELECT * FROM controls c  WHERE c.idVehicle LIKE :idVehicle LIMIT :pageSize OFFSET :page")
+    @Query(value="SELECT * FROM controls c  WHERE c.id_vehicle = :idVehicle LIMIT :pageSize OFFSET :page")
     Flux<ControlModel> findByIdVehicle(Long idVehicle, Integer pageSize, Integer page);
-    @Query(value="SELECT COUNT(*) FROM controls c  WHERE c.idState  LIKE :idVehicle")
+    @Query(value="SELECT COUNT(*) FROM controls c  WHERE c.id_vehicle = :idVehicle")
     Mono<Long> countFindByIdVehicle(Long idVehicle);
 }
