@@ -10,7 +10,6 @@ import co.com.elbaiven.model.utils.ModelListCompleteWithPages;
 import co.com.elbaiven.model.vehicle.Vehicle;
 import co.com.elbaiven.model.vehicle.gateways.VehicleRepository;
 import lombok.RequiredArgsConstructor;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.format.DateTimeFormatter;
