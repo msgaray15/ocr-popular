@@ -2,7 +2,7 @@ server:
   port: ${PORT:8080}
 spring:
   application:
-    name: ${NAME:"asarabias"}
+    name: ${NAME:asarabias}
   devtools:
     add-properties: false
   h2:
@@ -25,3 +25,7 @@ management:
 logging:
   level:
     root: ${LOG4J_LEVEL:INFO}
+
+recognition:
+  client-id: ${CLIENT-ID:prueba}
+  client-secret: ${CLIENT-SECRET:prueba}

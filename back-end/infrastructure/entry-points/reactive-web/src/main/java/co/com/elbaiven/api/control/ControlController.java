@@ -2,23 +2,27 @@ package co.com.elbaiven.api.control;
 
 import co.com.elbaiven.api.ResponseAPI;
 import co.com.elbaiven.api.control.inRQ.ControlRQ;
-import co.com.elbaiven.api.control.inRQ.PlacaExist;
+import co.com.elbaiven.api.control.inRQ.Register;
+import co.com.elbaiven.api.exception.util.ErrorException;
 import co.com.elbaiven.model.control.Control;
 import co.com.elbaiven.model.utils.Constants;
 import co.com.elbaiven.usecase.control.ControlUseCase;
 import co.com.elbaiven.util.LoggerMessage;
+import co.com.elbaiven.util.Recognition;
 import io.micrometer.core.lang.Nullable;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
 
 @RestController
 @RequestMapping(value = "/api/control", produces = MediaType.APPLICATION_JSON_VALUE)
 @AllArgsConstructor
 public class ControlController {
     private final ControlUseCase controlUseCase;
+    private final Recognition recognition;
     private static final LoggerMessage loggerMessage = new LoggerMessage("Input Control");
 
     @GetMapping
@@ -40,16 +44,18 @@ public class ControlController {
     }
 
     @PostMapping()
-    public Mono<ResponseAPI> create(@RequestBody ControlRQ controlRQ) {
-        loggerMessage.loggerInfo("create: " + controlRQ.toString());
-        return controlUseCase.create(toControl(controlRQ))
-                .map(ResponseAPI::getResponseAPI);
-    }
+    public Mono<ResponseAPI> create(@RequestBody Register register, @RequestHeader HttpHeaders httpHeaders) {
+        String clientId, clientSecret;
+        clientId = httpHeaders.getFirst("client-id");
+        clientSecret = httpHeaders.getFirst("client-secret");
 
-    @PostMapping("exist")
-    public Mono<ResponseAPI> placaExist(@RequestBody PlacaExist placaExist) {
-        loggerMessage.loggerInfo("placaExist: " + placaExist.toString());
-        return controlUseCase.placaExist(placaExist.getPlaca(), placaExist.getState())
+        if (clientId == null || clientSecret == null)
+            return Mono.error(new ErrorException("400", "El cliend-id  y client-secret Son obligatorios"));
+        if (!clientId.equals(recognition.getClientId()) || !clientSecret.equals(recognition.getClientSecret()))
+            return Mono.error(new ErrorException("400", "El cliend-id  y client-secret Son Incorrectas"));
+
+        loggerMessage.loggerInfo("create: " + register.toString());
+        return controlUseCase.create(register.getPlaca(), register.getState())
                 .map(ResponseAPI::getResponseAPI);
     }
 

@@ -4,47 +4,44 @@ import { useState, useEffect } from 'react';
 import { put, getWithJWT } from '../../../service/methodAPI';
 import { emptyItemInTheForm } from '../../../service/tools';
 
-const EditUser = ({ setBreadcrumb }) => {
+const EditVehicle = ({ setBreadcrumb }) => {
     const [id, setID] = useState();
-    const [returnParent, setReturnParent] = useState(false);
     const [form, setForm] = useState({
-        idPerson: "",
-        idRol: "",
-        email: "",
-        password: ""
+        serial: "",
+        idTypeVehicle: "",
+        licensePlate: "",
+        idUser: ""
     });
-    const [person, setPerson] = useState("");
-    const [listRol, setListRol] = useState([]);
+    const [user, setUser] = useState("");
+    const [listTypeVehicle, setListTypeVehicle] = useState([]);
     const [messenger, setMessenger] = useState([]);
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
-    const userRouter = "/api/user";
-    const rolRouter = "/api/rol";
+    const vihicleRouter = "/api/vehicle";
+    const typeVehicleRouter = "/api/typeVehicle";
 
     useEffect(() => {
         const urlParams = new URLSearchParams(window.location.search);
         const id = urlParams.get('id');
-        const returnParent = urlParams.get('returnParent');
-        if (returnParent != null) setReturnParent(returnParent);
-        id != null ? setID(id) : navigate("/users");
-        getWithJWT(userRouter + "/" + id, sessionStorage.getItem('token'))
+        id != null ? setID(id) : navigate("/vehicles");
+        getWithJWT(vihicleRouter + "/" + id, sessionStorage.getItem('token'))
             .then(response => {
                 if (response.status === 200) {
-                    setPerson(response.data.person.identification + " - " + response.data.person.name);
+                    setUser(response.data.user.person.identification + " - " + response.data.user.person.name);
                     setForm({
-                        ...form,
-                        idPerson: response.data.person.id,
-                        idRol: response.data.rol.id,
-                        email: response.data.email
+                        serial: response.data.serial,
+                        idTypeVehicle: response.data.typeVehicle.id,
+                        licensePlate: response.data.licensePlate,
+                        idUser: response.data.user.id
                     });
                 }
             })
             .catch(e => setMessenger(["Error server"]));
 
-        getWithJWT(rolRouter, sessionStorage.getItem('token'))
+        getWithJWT(typeVehicleRouter, sessionStorage.getItem('token'))
             .then(response => {
                 if (response.status === 200) {
-                    setListRol(response.data);
+                    setListTypeVehicle(response.data);
                 }
             })
             .catch(e => setMessenger(["Error server"]));
@@ -57,29 +54,27 @@ const EditUser = ({ setBreadcrumb }) => {
     };
 
     const validate = () => {
-        if (form.password.length === 0) delete form.password;
         if (!emptyItemInTheForm(form)) {
-            sendToUser();
+            sendToVehicle();
         } else {
             setMessenger(["Ningun campo puede estar vacio"]);
         }
     }
 
-    const sendToUser = () => {
+    const sendToVehicle = () => {
         setLoading(true)
-        put(userRouter + "/" + id, form, sessionStorage.getItem('token'))
+        put(vihicleRouter + "/" + id, form, sessionStorage.getItem('token'))
             .then(response => {
                 setLoading(false);
                 response.status === 200 ? navigate(-1) : setMessenger(["Error server"]);
             })
-            .catch(error =>navigate(-1));
+            .catch(error => navigate(-1));
     }
 
     const onClickCancel = () => {
-        if(!returnParent) setBreadcrumb([{ route: "/users", name: "Usuarios" }]);
-        navigate(-1);
+        setBreadcrumb([{ route: "/vehicles", name: "Vehiculos" }]);
+        navigate("/vehicles");
     };
-
 
     return (
         <div className='d-flex justify-content-center align-items-center heightCenter_vh_75'>
@@ -89,26 +84,26 @@ const EditUser = ({ setBreadcrumb }) => {
                     <div className='d-flex flex-wrap justify-content-center'>
                         <div className='mx-3'>
                             <Form.Group className="mb-3">
-                                <Form.Label>Persona</Form.Label>
-                                <Link to={"/people/edit?id=" + form.idPerson + "&returnParent=" + true} className="text-success"><i className="fa-solid fa-pen-to-square ms-3 text-success"></i></Link>
-                                <Form.Control type="text" name='idPerson' placeholder="1234567890" onChange={handleChange} value={person} disabled />
+                                <Form.Label>Usuario</Form.Label>
+                                <Link to={"/users/edit?id=" + form.idUser + "&returnParent=" + true} className="text-success"><i className="fa-solid fa-pen-to-square ms-3 text-success"></i></Link>
+                                <Form.Control type="text" name='user' onChange={handleChange} value={user} disabled />
                             </Form.Group>
                             <Form.Group className="mb-3">
-                                <Form.Label>Correo</Form.Label>
-                                <Form.Control type="text" name='email' placeholder="1234567890" onChange={handleChange} value={form.email} />
+                                <Form.Label>Serial</Form.Label>
+                                <Form.Control type="text" name='serial' onChange={handleChange} value={form.serial} />
                             </Form.Group>
                         </div>
                         <div className='mx-3'>
                             <Form.Group className="mb-3">
-                                <Form.Label>Rol</Form.Label>
-                                <Form.Select name='idRol' onChange={handleChange}>
-                                    {listRol?.map((item, i) => <option key={i} selected={item.id === form.idRol} value={item.id}>{item.name}</option>)}
+                                <Form.Label>tipo de vehiculo</Form.Label>
+                                <Form.Select name='idTypeVehicle' onChange={handleChange}>
+                                    {listTypeVehicle?.map((item, i) => <option key={i} selected={item.id === form.idRol} value={item.id}>{item.name}</option>)}
                                 </Form.Select>
                             </Form.Group>
 
                             <Form.Group className="mb-3">
-                                <Form.Label>Contraseña</Form.Label>
-                                <Form.Control type="text" name='password' onChange={handleChange} value={form.password} />
+                                <Form.Label>Placa</Form.Label>
+                                <Form.Control type="text" name='licensePlate' onChange={handleChange} value={form.licensePlate} />
                             </Form.Group>
                         </div>
                     </div>
@@ -130,4 +125,4 @@ const EditUser = ({ setBreadcrumb }) => {
     );
 }
 
-export default EditUser;
+export default EditVehicle;

@@ -22,6 +22,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/api/user/existEmail").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/person/existIdentification").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/person").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/control").permitAll()
                 .anyRequest().authenticated();
     }
 }
