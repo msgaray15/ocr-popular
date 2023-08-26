@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="GradleSettings">
+    <option name="linkedExternalProjectsSettings">
+      <GradleProjectSettings>
+        <option name="externalProjectPath" value="$PROJECT_DIR$/back-end" />
+        <option name="gradleJvm" value="#JAVA_HOME" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$/back-end" />
+            <option value="$PROJECT_DIR$/back-end/applications/app-service" />
+            <option value="$PROJECT_DIR$/back-end/domain/model" />
+            <option value="$PROJECT_DIR$/back-end/domain/usecase" />
+            <option value="$PROJECT_DIR$/back-end/infrastructure/driven-adapters/r2dbc-postgresql" />
+            <option value="$PROJECT_DIR$/back-end/infrastructure/entry-points/reactive-web" />
+            <option value="$PROJECT_DIR$/back-end/infrastructure/helpers/jwt-commons" />
+            <option value="$PROJECT_DIR$/back-end/infrastructure/helpers/util" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+    </option>
+  </component>
+</project>

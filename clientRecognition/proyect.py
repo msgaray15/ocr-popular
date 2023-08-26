@@ -43,10 +43,11 @@ def startRecognition():
 
                     if len(text) >= 5 and text != placaCurrentRead:
                         text = text[0:6]
-                        responseBackend = sendControl(text)
+                        '''responseBackend = sendControl(text)
                         print("   > Response Backend: " , responseBackend.content)
                         if responseBackend.status_code == 200:
                             placaCurrentRead = text
+                            '''
             #Quitar
             cv.imshow("areaInterest", areaInterest)
 

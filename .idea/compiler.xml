@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <bytecodeTargetLevel>
+      <module name="baiven.app-service" target="11" />
+      <module name="baiven.app-service.main" target="11" />
+      <module name="baiven.app-service.test" target="11" />
+      <module name="baiven.jwt-commons" target="11" />
+      <module name="baiven.jwt-commons.main" target="11" />
+      <module name="baiven.jwt-commons.test" target="11" />
+      <module name="baiven.model" target="11" />
+      <module name="baiven.model.main" target="11" />
+      <module name="baiven.model.test" target="11" />
+      <module name="baiven.r2dbc-postgresql" target="11" />
+      <module name="baiven.r2dbc-postgresql.main" target="11" />
+      <module name="baiven.r2dbc-postgresql.test" target="11" />
+      <module name="baiven.reactive-web" target="11" />
+      <module name="baiven.reactive-web.main" target="11" />
+      <module name="baiven.reactive-web.test" target="11" />
+      <module name="baiven.usecase" target="11" />
+      <module name="baiven.usecase.main" target="11" />
+      <module name="baiven.usecase.test" target="11" />
+      <module name="baiven.util" target="11" />
+      <module name="baiven.util.main" target="11" />
+      <module name="baiven.util.test" target="11" />
+    </bytecodeTargetLevel>
+  </component>
+</project>
