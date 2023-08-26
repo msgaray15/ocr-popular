@@ -13,7 +13,13 @@ const StackHeaderTable = ({ title, pages, router, setBreadcrumb, handleChange, f
             <div><Form.Control type="text" placeholder="Buscar" name='textSearch' onChange={handleChange} size='sm'/></div>
             <div><Button variant="success" size='sm' onClick={buttonSearch}><i class="fa-solid fa-magnifying-glass"></i></Button></div>
             <div className="ms-auto "><PaginationTables handleChange={handleChange} pages={pages} formPageSize={formPageSize} /></div>
-            <div><Link to={router + "/new"} onClick={() => setBreadcrumb([{ route: router, name: title }, { route: "/new", name: "Nuevo" }])}><i className="fa-solid fa-plus ms-3 text-success"></i></Link></div>
+            {
+                router !== undefined ?
+                <div><Link to={router + "/new"} onClick={() => setBreadcrumb([{ route: router, name: title }, { route: "/new", name: "Nuevo" }])}><i className="fa-solid fa-plus ms-3 text-success"></i></Link></div>
+                :
+                ""
+            }
+            
         </Stack>
     );
 }
