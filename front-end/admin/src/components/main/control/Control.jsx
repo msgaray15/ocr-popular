@@ -131,9 +131,9 @@ const Control = () => {
     return (
         <div className="mx-4 my-3">
             {changeInputSearch ?
-                <StackHeaderTableWithSearchFormSelect title={"Usuarios"} pages={data?.pages} router={"/users"} handleChange={handleChange} formPageSize={form.pageSize} buttonSearch={buttonSearch} dataFormSelect={dataFormSelect} />
+                <StackHeaderTableWithSearchFormSelect pages={data?.pages} handleChange={handleChange} formPageSize={form.pageSize} buttonSearch={buttonSearch} dataFormSelect={dataFormSelect} />
                 :
-                <StackHeaderTable title={"Usuarios"} pages={data?.pages} router={"/users"} handleChange={handleChange} formPageSize={form.pageSize} listTypeSearch={listTypeSearch} buttonSearch={buttonSearch} />
+                <StackHeaderTable pages={data?.pages} handleChange={handleChange} formPageSize={form.pageSize} listTypeSearch={listTypeSearch} buttonSearch={buttonSearch} />
             }
             {loading ?
                 <Loading />
@@ -141,7 +141,7 @@ const Control = () => {
                 data?.pages?.totalRecords === 0 ?
                     <EmptyAnswer />
                     :
-                    <DynamicTable tableStructure={tableStructure} data={data?.list} routerActions={"/users"} />
+                    <DynamicTable tableStructure={tableStructure} data={data?.list}/>
             }
 
         </div>
