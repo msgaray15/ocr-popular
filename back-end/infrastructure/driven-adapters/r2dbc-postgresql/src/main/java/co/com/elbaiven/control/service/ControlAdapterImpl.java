@@ -102,7 +102,11 @@ public class ControlAdapterImpl implements ControlRepository {
     public Flux<ControlModel> getListControlByTypeSearch(Integer page, Integer pageSize, String typeSearch, String search) {
         switch (typeSearch) {
             case "date":
-                return controlReactiveRepository.findByDate(search + '%', pageSize, page*pageSize);
+                String dateStart, dateEnd;
+
+                dateStart = search.split("-")[0]; //20230701 00:00:00-20230830 23:59:59 -> 20230701 00:00:00
+                dateEnd = search.split("-")[1]; //20230701 00:00:00-20230830 23:59:59 -> 20230830 23:59:59
+                return controlReactiveRepository.findByDate(dateStart,dateEnd, pageSize, page*pageSize);
             case "idState":
                 return controlReactiveRepository.findByIdState(Long.parseLong(search), pageSize, page*pageSize);
             case "idVehicle":
