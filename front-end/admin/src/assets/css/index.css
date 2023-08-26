@@ -1,4 +1,4 @@
-.col-center{
+.col-center {
 
   justify-content: center;
   width: 700px;
@@ -8,11 +8,11 @@ a {
   text-decoration: none !important;
 }
 
-.sizeInputFromPagination{
+.sizeInputFromPagination {
   width: 70px !important;
 }
 
-.heightCenter_vh_75{
+.heightCenter_vh_75 {
   height: 75vh;
 }
 
@@ -21,9 +21,24 @@ a {
   --bs-pagination-active-bg: #198754 !important;
 }
 
-.table_column_actions{
+.table_column_actions {
   width: 120px;
 }
-.tbody-select:hover{
+
+.tbody-select:hover {
   background-color: #198754;
+}
+
+.inputTypeDate {
+  width: 30px;
+  padding: 5px;
+  border: none;
+  font-size: large;
+}
+
+.inputTypeTextRepresentDate {
+  width: 210px;
+  border: none;
+  padding: 5px;
+  font-size: large;
 }
