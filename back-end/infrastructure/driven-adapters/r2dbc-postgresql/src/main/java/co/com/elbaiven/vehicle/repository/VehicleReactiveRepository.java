@@ -14,9 +14,9 @@ public interface VehicleReactiveRepository extends ReactiveCrudRepository<Vehicl
     Flux<VehicleModel> findBySerial(String search, Integer pageSize,Integer page);
     @Query(value="SELECT * FROM vehicles v WHERE v.serial LIKE :search")
     Mono<Long> countFindBySerial(String search);
-    @Query(value="SELECT * FROM vehicles v WHERE v.licensePlate LIKE :search LIMIT :pageSize OFFSET :page")
+    @Query(value="SELECT * FROM vehicles v WHERE v.license_plate LIKE :search LIMIT :pageSize OFFSET :page")
     Flux<VehicleModel> findByLicensePlate(String search, Integer pageSize,Integer page);
-    @Query(value="SELECT * FROM vehicles v WHERE v.licensePlate LIKE :search")
+    @Query(value="SELECT * FROM vehicles v WHERE v.license_plate LIKE :search")
     Mono<Long> countFindByLicensePlate(String search);
 
 }
