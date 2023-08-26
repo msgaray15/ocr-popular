@@ -21,7 +21,7 @@ function App() {
     const access = urlParams.get('access');
     access != null ? sessionStorage.setItem("token", "Bearer " + urlParams.get('access')) : window.location.href = regirectToLogin;
     const getDataUser = jwtToDataUser();
-    getDataUser != null && getDataUser?.rol?.name === "vigilante" ? setDataUser(getDataUser) : window.location.href = regirectToLogin;
+    getDataUser != null && getDataUser?.rol?.name === "Vigilante" ? setDataUser(getDataUser) : window.location.href = regirectToLogin;
   }, []);
 
 
