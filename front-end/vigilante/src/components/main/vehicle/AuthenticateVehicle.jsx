@@ -23,10 +23,10 @@ function AuthenticateVehicle() {
         <div className="text-center mb-4" >
             <div className="card-body d-flex align-items-center justify-content-center" Style={'height:75vh'}>
                 <div>
-                    <img className="card-img " Style={'max-width:80px;margin:auto'} src={success} />
+                    <img className="card-img " Style={'max-width:80px;margin:auto'} src={danger} />
                  
                 </div>
-                  <Alert key="success" variant="success">
+                  <Alert key="danger" variant="danger">
                   The vehicle to enter if it belongs to the campus!
                 </Alert>
                 
