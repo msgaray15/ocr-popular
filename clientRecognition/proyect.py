@@ -144,11 +144,13 @@ def getTextFromFramePlaca(frame):
 
 
 def sendControl(text):
-    client_id = 'prueba'
-    client_secret = 'prueba'
+    path = config['sendControl']['path']
+    client_id = config['sendControl']['client_id']
+    client_secret = config['sendControl']['client_secret']
+    statusToSend = config['sendControl']['statusToSend']
     payload = {
         'placa': text,
-        'state': 'input'
+        'state': statusToSend
     }
     headers = {
         'Content-Type': 'application/json',
@@ -156,7 +158,7 @@ def sendControl(text):
         'client-secret': client_secret
     }
 
-    return requests.post('http://localhost:8080/api/control', json=payload, headers=headers)
+    return requests.post(path, json=payload, headers=headers)
 
 
 startRecognition()

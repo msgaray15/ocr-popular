@@ -24,5 +24,11 @@
             "min": 2,
             "max": 2.4
         }
+    },
+    "sendControl":{
+        "path": "http://localhost:8080/api/control",
+        "client_id": "prueba",
+        "client_secret": "prueba",
+        "statusToSend": "input"
     }
 }
