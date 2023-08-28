@@ -1,0 +1,28 @@
+{
+    "startRecognition":{
+        "cameraDevice": 0,
+        "frameToProcess": 25,
+        "minCharactersToSendControl": 5,
+        "characterRange": {
+            "start": 0,
+            "end": 6
+        }
+    },
+    "areaOfInterestBetweenTheParts": {
+        "parts_nxn": 3,
+        "positionOfInterest" : 5
+    },
+    "threshold":{
+        "thresh": 150,
+        "maxval": 255
+    },
+    "filterContoursByRectangle":{
+        "percentageOfEpsilon": 0.04,
+        "minWidth": 96,
+        "minHeight": 48,
+        "aspectRatio":{
+            "min": 2,
+            "max": 2.4
+        }
+    }
+}
