@@ -25,6 +25,13 @@ public class RolController {
                 .map(ResponseAPI::getResponseAPI);
     }
 
+    @GetMapping("/name/{name}")
+    public Mono<ResponseAPI> getName(@PathVariable("name") String name) {
+        loggerMessage.loggerInfo("read: "+ name);
+        return  rolUseCase.read(name)
+                .map(ResponseAPI::getResponseAPI);
+    }
+
     @GetMapping("{id}")
     public Mono<ResponseAPI> getId(@PathVariable("id") Long id) {
         loggerMessage.loggerInfo("read: "+ id);
