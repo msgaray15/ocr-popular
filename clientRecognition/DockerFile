@@ -1,0 +1,11 @@
+FROM jjanzic/docker-python3-opencv 
+WORKDIR /usr/src/app
+# Copiar el archivo.py que queremos ejecutar a la imagen.
+COPY proyect.py /usr/src/app
+COPY config.json /usr/src/app
+#Correr dependecias
+RUN pip install --upgrade pip
+RUN pip install pytesseract
+RUN pip install requests
+# Ejecutar el archivo al iniciar la imagen en un contenedor.
+CMD ["python", "proyect.py"]

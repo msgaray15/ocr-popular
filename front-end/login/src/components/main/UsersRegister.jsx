@@ -5,9 +5,10 @@ import { post } from '../../service/methodAPI';
 import { emptyItemInTheForm } from '../../service/tools';
 
 const Register = ({ person }) => {
+    const idRolValue = process.env.REACT_APP_ID_ROL_STUDENT_USER_PATH;
     const [form, setForm] = useState({
         idPerson: person?.id,
-        idRol: 4, // cambiar
+        idRol: idRolValue,
         email: "",
         password: "",
         confirmPassword: ""
@@ -15,10 +16,11 @@ const Register = ({ person }) => {
     const [messenger, setMessenger] = useState([]);
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
-    const userRouter = "/api/user";
+    const userRouter = process.env.REACT_APP_BACK_END_USER_PATH;
+    const dominioEmail = process.env.REACT_APP_DOMAIN_EMAIL;
 
     useEffect(() => {
-        if (person == undefined) navigate("/peopleRegister");
+        if (person === undefined) navigate("/peopleRegister");
     }, [])
 
     const handleChange = (event) => {
@@ -35,12 +37,12 @@ const Register = ({ person }) => {
     }
 
     const validate = () => {
-        let sout = [];
+        let sout = [], emialComplete;
         if (emptyItemInTheForm(form)) sout.push("Ningun campo puede estar vacio");
-        if (form.password.length != 0 && form.confirmPassword.length != 0) sout = validatePasswords(sout);
-        if (form.email.length != 0) {
-            form.email = form.email + "@unicesar.edu.co";
-            validateEmail({ "email": form.email }, sout)
+        if (form.password.length !== 0 && form.confirmPassword.length !== 0) sout = validatePasswords(sout);
+        if (form.email.length !== 0) {
+            emialComplete = form.email + dominioEmail;
+            validateEmail({ "email": emialComplete }, sout)
         };
     }
 
@@ -62,7 +64,7 @@ const Register = ({ person }) => {
     }
 
     const validatePasswords = (sout) => {
-        if (form.password != form.confirmPassword) {
+        if (form.password !== form.confirmPassword) {
             sout.push("La contraseña y el confirmación de esta deben de ser iguales");
         } else {
             let auxSout = [];
@@ -83,6 +85,7 @@ const Register = ({ person }) => {
 
     const sendToUser = () => {
         setLoading(true)
+        form.email = form.email + dominioEmail;
         post(userRouter, form)
             .then(response => {
                 setLoading(false)

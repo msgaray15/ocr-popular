@@ -18,8 +18,8 @@ const EditUser = ({ setBreadcrumb }) => {
     const [messenger, setMessenger] = useState([]);
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
-    const userRouter = "/api/user";
-    const rolRouter = "/api/rol";
+    const userRouter = process.env.REACT_APP_BACK_END_USER_PATH;
+    const rolRouter = process.env.REACT_APP_BACK_END_ROL_PATH;
 
     useEffect(() => {
         const urlParams = new URLSearchParams(window.location.search);

@@ -41,8 +41,7 @@ def startRecognition():
                 contoursRectangle = filterContoursByRectangle(
                     candidates)
                 # Quitar
-                cv.drawContours(
-                    areaInterest, contoursRectangle, -1, (1, 2, 255), 2)
+                #cv.drawContours(areaInterest, contoursRectangle, -1, (1, 2, 255), 2)
                 print("Cantidad de contornos rectangulos: ",
                       len(contoursRectangle))
                 for item in contoursRectangle:
@@ -65,7 +64,7 @@ def startRecognition():
                             
 
             # Quitar
-            cv.imshow("areaInterest", areaInterest)
+            #cv.imshow("areaInterest", areaInterest)
 
     source.release()
 

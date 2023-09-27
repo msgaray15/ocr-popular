@@ -17,14 +17,14 @@ const EditVehicle = ({ setBreadcrumb }) => {
     const [messenger, setMessenger] = useState([]);
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
-    const vihicleRouter = "/api/vehicle";
-    const typeVehicleRouter = "/api/typeVehicle";
+    const vehicleRouter = process.env.REACT_APP_BACK_END_VEHICLE_PATH;
+    const typeVehicleRouter = process.env.REACT_APP_BACK_END_TYPE_VEHICLE_PATH;
 
     useEffect(() => {
         const urlParams = new URLSearchParams(window.location.search);
         const id = urlParams.get('id');
         id != null ? setID(id) : navigate("/vehicles");
-        getWithJWT(vihicleRouter + "/" + id, sessionStorage.getItem('token'))
+        getWithJWT(vehicleRouter + "/" + id, sessionStorage.getItem('token'))
             .then(response => {
                 if (response.status === 200) {
                     setUser(response.data.user.person.identification + " - " + response.data.user.person.name);
@@ -63,7 +63,7 @@ const EditVehicle = ({ setBreadcrumb }) => {
 
     const sendToVehicle = () => {
         setLoading(true)
-        put(vihicleRouter + "/" + id, form, sessionStorage.getItem('token'))
+        put(vehicleRouter + "/" + id, form, sessionStorage.getItem('token'))
             .then(response => {
                 setLoading(false);
                 response.status === 200 ? navigate(-1) : setMessenger(["Error server"]);

@@ -33,7 +33,7 @@ const DailyReport = () => {
         thead: ["Fecha", "Placa", "Usuario", "Registro"],
         tbody: ["date", ["vehicle", "licensePlate"], ["vehicle", "user", "person", "name"], ["state", "name"]]
     };
-    const controlRouter = "/api/control";
+    const controlRouter = process.env.REACT_APP_BACK_END_CONTROL_PATH;
     const handleChange = (event) => {
         const { name, value } = event.target;
         name === "pageSize" ? setForm({ ...form, [name]: value, page: 1 }) : setForm({ ...form, [name]: value });

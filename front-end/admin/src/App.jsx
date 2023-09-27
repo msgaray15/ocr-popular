@@ -25,7 +25,8 @@ import EditVehicle from './components/main/vehicle/EditVehicle';
 
 
 function App() {
-  const regirectToLogin = "http://localhost:3000/";
+  const regirectToLogin = process.env.REACT_APP_FRONT_END_LOGIN_HOST;
+  const nameRolAdministrador = process.env.REACT_APP_NAME_ROL_ADMINISTRADOR;
   const [dataUser, setDataUser] = useState({});
   const [show, setShow] = useState(false);
   const [breadcrumb, setBreadcrumb] = useState([{ route: "/", name: "Inicio" }]);
@@ -33,9 +34,9 @@ function App() {
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const access = urlParams.get('access');
-    access != null ? sessionStorage.setItem("token", "Bearer " + urlParams.get('access')) : window.location.href = regirectToLogin;
+    access !== null ? sessionStorage.setItem("token", "Bearer " + urlParams.get('access')) : window.location.href = regirectToLogin;
     const getDataUser = jwtToDataUser();
-    getDataUser != null && getDataUser?.rol?.name === "Administrador" ? setDataUser(getDataUser) : window.location.href = regirectToLogin;
+    getDataUser !== null && getDataUser?.rol?.name === nameRolAdministrador ? setDataUser(getDataUser) : window.location.href = regirectToLogin;
   }, []);
 
 
@@ -58,7 +59,7 @@ function App() {
         <Route path="/roles" element={<Rol />} />
 
         <Route path="/states" element={<State />} />
-
+        
         <Route path="/typeVehicles" element={<TypeVehicle setBreadcrumb={setBreadcrumb} />} />
         <Route path="/typeVehicles/new" element={<NewTypeVehicle setBreadcrumb={setBreadcrumb} />} />
         <Route path="/typeVehicles/edit" element={<EditTypeVehicle setBreadcrumb={setBreadcrumb} />} />

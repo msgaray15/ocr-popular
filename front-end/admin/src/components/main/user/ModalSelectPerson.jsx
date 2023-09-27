@@ -33,7 +33,7 @@ const ModalSelectPerson = ({ show, onHide, setBreadcrumb, setFormUser, formUser,
         typeSearch: listTypeSearch[0].key,
         textSearch: ""
     });
-    const peopleRouter = "/api/person";
+    const peopleRouter = process.env.REACT_APP_BACK_END_PEOPLE_PATH;
 
     useEffect(() => {
         getWithJWTWithParams(form.page);

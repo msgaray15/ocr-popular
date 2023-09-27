@@ -40,9 +40,9 @@ const Control = () => {
         thead: ["Fecha", "Estado", "Placa", "Serial", "tipo de vehiculo", "Usuario"],
         tbody: ["date", ["state", "name"], ["vehicle", "licensePlate"], ["vehicle", "serial"], ["vehicle", "typeVehicle","name"], ["vehicle", "user","person","name"]]
     };
-    const controlRouter = "/api/control";
-    const stateRouter = "/api/state";
-    const vehicleRouter = "/api/vehicle";
+    const controlRouter = process.env.REACT_APP_BACK_END_CONTROL_PATH;
+    const stateRouter = process.env.REACT_APP_BACK_END_STATE_PATH;
+    const vehicleRouter = process.env.REACT_APP_BACK_END_VEHICLE_PATH;
 
     useEffect(() => {
         getWithJWTWithParams(form.page);

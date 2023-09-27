@@ -13,7 +13,7 @@ const ModalSearchVehicle = ({ show, handleClose, setVehicle }) => {
         typeSearch: "licensePlate",
         textSearch: ""
     });
-    const vehicleRouter = "/api/vehicle";
+    const vehicleRouter = process.env.REACT_APP_BACK_END_VEHICLE_PATH;;
     
     const handleChange = (event) => {
         const { name, value } = event.target;

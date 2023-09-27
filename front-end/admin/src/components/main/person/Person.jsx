@@ -37,7 +37,7 @@ const Person = ({ setBreadcrumb }) => {
         thead: ["Nombre", "Cedula", "Dirección", "Telefono"],
         tbody: ["name", "identification", "address", "phone"]
     };
-    const peopleRouter = "/api/person";
+    const peopleRouter = process.env.REACT_APP_BACK_END_PEOPLE_PATH;
 
     useEffect(() => {
         getWithJWTWithParams(form.page);

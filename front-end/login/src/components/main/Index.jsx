@@ -1,5 +1,5 @@
 import { Button, Form, Card, Spinner } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Link} from 'react-router-dom';
 import { useState } from 'react';
 import { post } from '../../service/methodAPI';
 import { emptyItemInTheForm, parseJwt } from '../../service/tools';
@@ -11,12 +11,8 @@ const Index = () => {
         email: "",
         password: ""
     });
-    const loginRouter = "/api/user/login";
-    const regirectTo = {
-        "Administrador": "http://localhost:3001/",
-        "Vigilante": "http://localhost:3002/",
-        "Estudiante": "http://localhost:3003/"
-    };
+    const loginRouter = process.env.REACT_APP_BACK_END_LOGIN_PATH;
+    const regirectTo = JSON.parse(process.env.REACT_APP_FRONT_END_MAP_ROL_HOST);
 
     const handleChange = (event) => {
         if (messenger.length > 0) setMessenger("");

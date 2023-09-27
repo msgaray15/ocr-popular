@@ -12,7 +12,7 @@ const EditTypeVehicle = ({ setBreadcrumb }) => {
     const [messenger, setMessenger] = useState([]);
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
-    const typeVehicleRouter = "/api/typeVehicle";
+    const typeVehicleRouter = process.env.REACT_APP_BACK_END_TYPE_VEHICLE_PATH;
 
     useEffect(() => {
         const urlParams = new URLSearchParams(window.location.search);

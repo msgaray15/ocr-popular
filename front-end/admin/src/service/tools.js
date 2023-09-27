@@ -11,6 +11,6 @@ export const jwtToDataUser = () =>{
     return parseJwt(sessionStorage.getItem("token"))?.data;
 }
 
-export const pageSize = [1,2,5, 10, 15, 20, 25, 30, 50];
+export const pageSize = JSON.parse(process.env.REACT_APP_PAGE_SIZE);
 
-export const defaultPageSize = 15;
+export const defaultPageSize = parseInt(process.env.REACT_APP_DEFAULT_PAGE_SIZE, 10);

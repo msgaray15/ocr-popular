@@ -11,7 +11,7 @@ const Rol = () => {
         thead: ["Nombre"],
         tbody: ["name"]
     };
-    const peopleRouter = "/api/rol";
+    const peopleRouter = process.env.REACT_APP_BACK_END_ROL_PATH;
 
     useEffect(() => {
         getWithJWTWithParams();

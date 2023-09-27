@@ -1,7 +1,7 @@
 {
     "startRecognition":{
         "cameraDevice": 0,
-        "frameToProcess": 25,
+        "frameToProcess": 10,
         "minCharactersToSendControl": 5,
         "characterRange": {
             "start": 0,

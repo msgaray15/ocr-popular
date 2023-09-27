@@ -14,7 +14,7 @@ const Register = ({ setPerson }) => {
     const [messenger, setMessenger] = useState([]);
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
-    const peopleRouter = "/api/person";
+    const peopleRouter = process.env.REACT_APP_BACK_END_PERSON_PATH;
 
     const handleChange = (event) => {
         if (messenger.length > 0) setMessenger([]);
@@ -25,7 +25,7 @@ const Register = ({ setPerson }) => {
     const validate = () => {
         let sout = [];
         if (emptyItemInTheForm(form)) sout.push("Ningun campo puede estar vacio");
-        if (form.identification.length != 0) {
+        if (form.identification.length !== 0) {
             validateIdentification({ "identification": form.identification }, sout)
         } else {
             setMessenger(sout);

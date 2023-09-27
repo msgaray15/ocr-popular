@@ -11,7 +11,7 @@ const State = () => {
         thead: ["Nombre"],
         tbody: ["name"]
     };
-    const peopleRouter = "/api/state";
+    const stateRouter = process.env.REACT_APP_BACK_END_STATE_PATH;
 
     useEffect(() => {
         getWithJWTWithParams();
@@ -19,7 +19,7 @@ const State = () => {
 
     const getWithJWTWithParams = () => {
         setLoading(true);
-        getWithJWT(peopleRouter, sessionStorage.getItem('token'))
+        getWithJWT(stateRouter, sessionStorage.getItem('token'))
             .then(response => {
                 setLoading(false);
                 if (response.status === 200) {

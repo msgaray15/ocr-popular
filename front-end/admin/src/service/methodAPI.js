@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:8080";
+const baseUrl = process.env.REACT_APP_BACK_END_BASE_URL;
 
 const headers = {
     mode: 'cors',
@@ -8,7 +8,7 @@ const headers = {
 }
 
 export const getWithJWT = async (route, jwt) => {
-    const response = await fetch(BASE_URL + route, {
+    const response = await fetch(baseUrl + route, {
         mode: 'cors',
         headers: {
             'Content-Type': 'application/json',
@@ -24,7 +24,7 @@ export const getWithJWT = async (route, jwt) => {
 }
 
 export const get = async (route) => {
-    const response = await fetch(BASE_URL + route);
+    const response = await fetch(baseUrl + route);
     let data = await response.json();
     response.status === 200 ? data = data.data : data = data.error;
     return {
@@ -34,7 +34,7 @@ export const get = async (route) => {
 }
 
 export const postWithJWT = async (route, form, jwt) => {
-    const response = await fetch(BASE_URL + route, {
+    const response = await fetch(baseUrl + route, {
         method: 'POST',
         mode: 'cors',
         headers: {
@@ -52,7 +52,7 @@ export const postWithJWT = async (route, form, jwt) => {
 }
 
 export const post = async (route, form) => {
-    const response = await fetch(BASE_URL + route, {
+    const response = await fetch(baseUrl + route, {
         method: 'POST',
         ...headers,
         body: JSON.stringify(form)
@@ -66,7 +66,7 @@ export const post = async (route, form) => {
 }
 
 export const put = async (route, form, jwt) => {
-    const response = await fetch(BASE_URL + route, {
+    const response = await fetch(baseUrl + route, {
         method: 'PUT',
         mode: 'cors',
         headers: {
@@ -84,7 +84,7 @@ export const put = async (route, form, jwt) => {
 }
 
 export const delet = async (route, jwt) => {
-    const response = await fetch(BASE_URL + route, {
+    const response = await fetch(baseUrl + route, {
         method: 'DELETE',
         mode: 'cors',
         headers: {

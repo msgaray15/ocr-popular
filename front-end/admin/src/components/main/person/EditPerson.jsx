@@ -16,7 +16,7 @@ const EditPerson = ({ setBreadcrumb }) => {
     const [messenger, setMessenger] = useState([]);
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
-    const peopleRouter = "/api/person";
+    const peopleRouter = process.env.REACT_APP_BACK_END_PEOPLE_PATH;
 
     useEffect(() => {
         const urlParams = new URLSearchParams(window.location.search);

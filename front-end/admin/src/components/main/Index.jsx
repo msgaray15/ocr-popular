@@ -4,7 +4,6 @@ import Historical from './indexTabs/historical/Historical';
 import Search from './indexTabs/search/Search';
 
 const Index = () => {
-    
     return (
         <Tabs
             defaultActiveKey="dailyReport"

@@ -12,7 +12,7 @@ const TypeVehicle = ( {setBreadcrumb }) => {
         thead: ["Nombre"],
         tbody: ["name"]
     };
-    const typeVehicleRouter = "/api/typeVehicle";
+    const typeVehicleRouter = process.env.REACT_APP_BACK_END_TYPE_VEHICLE_PATH;
 
     useEffect(() => {
         getWithJWTWithParams();

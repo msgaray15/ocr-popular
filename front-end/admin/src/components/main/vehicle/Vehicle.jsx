@@ -33,7 +33,7 @@ const Vehicle = ({ setBreadcrumb }) => {
         thead: ["Placa", "Serial", "Tipo de carro", "Usuario", "Identificacion", "Rol"],
         tbody: ["licensePlate", "serial", ["typeVehicle", "name"], ["user", "person", "name"], ["user", "person", "identification"], ["user","rol", "name"]]
     };
-    const vehicleRouter = "/api/vehicle";
+    const vehicleRouter = process.env.REACT_APP_BACK_END_VEHICLE_PATH;
 
     useEffect(() => {
         getWithJWTWithParams(form.page);

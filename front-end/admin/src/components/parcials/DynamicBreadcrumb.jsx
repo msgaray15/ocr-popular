@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 //breadcrumb = [{route:"value",name:"value"}] 
 const DynamicBreadcrumb = ({ breadcrumb, setBreadcrumb }) => {
-    if (breadcrumb === undefined || breadcrumb.length == 0 || !Array.isArray(breadcrumb)) return <p className="mt-2 mx-2">Error</p>;
+    if (breadcrumb === undefined || breadcrumb.length === 0 || !Array.isArray(breadcrumb)) return <p className="mt-2 mx-2">Error</p>;
 
     return (
         <Breadcrumb className="mt-2 mx-2">

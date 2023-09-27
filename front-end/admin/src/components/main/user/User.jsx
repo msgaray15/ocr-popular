@@ -36,8 +36,8 @@ const User = ({ setBreadcrumb }) => {
         thead: ["Nombre", "Cedula", "Dirección", "Telefono", "Rol", "Email"],
         tbody: [["person", "name"], ["person", "identification"], ["person", "address"], ["person", "phone"], ["rol", "name"], "email"]
     };
-    const userRouter = "/api/user";
-    const rolRouter = "/api/rol";
+    const userRouter = process.env.REACT_APP_BACK_END_USER_PATH;
+    const rolRouter = process.env.REACT_APP_BACK_END_ROL_PATH;
 
     useEffect(() => {
         getWithJWTWithParams(form.page);

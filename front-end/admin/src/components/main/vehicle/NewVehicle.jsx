@@ -19,8 +19,8 @@ const NewVehicle = ({ setBreadcrumb }) => {
     const [messenger, setMessenger] = useState([]);
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
-    const vehicleRouter = "/api/vehicle";
-    const tipoVehicleRouter = "/api/typeVehicle";
+    const vehicleRouter = process.env.REACT_APP_BACK_END_VEHICLE_PATH;
+    const tipoVehicleRouter = process.env.REACT_APP_BACK_END_TYPE_VEHICLE_PATH;
 
     useEffect(() => {
         getWithJWT(tipoVehicleRouter, sessionStorage.getItem('token'))
