@@ -34,6 +34,8 @@ const DailyReport = () => {
         tbody: ["date", ["vehicle", "licensePlate"], ["vehicle", "user", "person", "name"], ["state", "name"]]
     };
     const controlRouter = process.env.REACT_APP_BACK_END_CONTROL_PATH;
+    const stateNameIn = process.env.REACT_APP_NAME_STATE_INPUT;
+    const stateNameOut = process.env.REACT_APP_NAME_STATE_OUTPUT;
     const handleChange = (event) => {
         const { name, value } = event.target;
         name === "pageSize" ? setForm({ ...form, [name]: value, page: 1 }) : setForm({ ...form, [name]: value });
@@ -72,8 +74,8 @@ const DailyReport = () => {
                 if (response.status === 200) {
                     let data = response.data;
                     setData(data);
-                    setCountInput(getCountStateFromData(data.list, "input"));
-                    setCountOut(getCountStateFromData(data.list, "out"));
+                    setCountInput(getCountStateFromData(data.list, stateNameIn));
+                    setCountOut(getCountStateFromData(data.list, stateNameOut));
                 } else {
                     console.log("Error");
                 }
