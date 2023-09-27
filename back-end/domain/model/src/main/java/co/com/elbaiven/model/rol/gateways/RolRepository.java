@@ -7,6 +7,7 @@ import reactor.core.publisher.Mono;
 public interface RolRepository {
     Mono<Rol> create(Rol rol);
     Mono<Rol> read(Long id);
+    Mono<Rol> read(String name);
     Mono<Rol> update(Long id,Rol rol);
     Mono<Void> delete(Long id);
     Flux<Rol> getAll();
