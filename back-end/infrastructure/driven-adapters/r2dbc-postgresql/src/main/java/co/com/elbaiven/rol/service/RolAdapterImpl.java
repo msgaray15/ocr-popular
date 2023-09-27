@@ -33,6 +33,16 @@ public class RolAdapterImpl implements RolRepository {
                 );
     }
 
+    public Mono<Rol> read(String name) {
+        return rolReactiveRepository.findByName(name)
+                .map((e) ->toRol(e))
+                .switchIfEmpty(Mono.defer(() -> {
+                                    throw new ErrorException("404", "Rol no encontrado");
+                                }
+                        )
+                );
+    }
+
     public Mono<Rol> update(Long id, Rol rol) {
         rol.setId(id);
         return rolReactiveRepository.save(toRolModel(rol))
