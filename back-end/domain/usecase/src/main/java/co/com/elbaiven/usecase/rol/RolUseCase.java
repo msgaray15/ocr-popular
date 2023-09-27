@@ -19,6 +19,9 @@ public class RolUseCase {
     public Mono<Rol> read(Long id){
         return rolRepository.read(id);
     }
+    public Mono<Rol> read(String name){
+        return rolRepository.read(name);
+    }
 
     public Mono<Rol> update(Long id,Rol rol){
         return rolRepository.update(id,rol);
