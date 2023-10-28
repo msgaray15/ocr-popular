@@ -37,8 +37,11 @@ a {
 }
 
 .inputTypeTextRepresentDate {
-  width: 210px;
+  width: 150px;
   border: none;
   padding: 5px;
   font-size: large;
+}
+.heightCenter_vh_83 {
+  height: 83vh;
 }

@@ -18,16 +18,8 @@ const Control = () => {
             value: "Seleccionar"
         },
         {
-            key: "date",
-            value: "Fecha"
-        },
-        {
             key: "idState",
             value: "Estado"
-        },
-        {
-            key: "idVehicle",
-            value: "Vehiculo"
         }
     ];
     const [form, setForm] = useState({
@@ -52,10 +44,11 @@ const Control = () => {
         const { name, value } = event.target;
         if (name === "typeSearch") {
             if (value === "idState") getWithJWTState();
-            if (value === "idVehicle") getWithJWTVehicle();
-            setChangeInputSearch(value === "idState" || value === "idVehicle");
+            setChangeInputSearch(value === "idState");
+        }else{
+            name === "pageSize" ? setForm({ ...form, [name]: value, page: 1 }) : setForm({ ...form, [name]: value});
+        
         }
-        name === "pageSize" ? setForm({ ...form, [name]: value, page: 1 }) : setForm({ ...form, [name]: value });
     };
 
     const buttonSearch = () => {
@@ -68,32 +61,6 @@ const Control = () => {
         });
     }
 
-    const getWithJWTVehicle = () => {
-        setDataFormSelect([]);
-        getWithJWT(vehicleRouter, sessionStorage.getItem('token'))
-            .then(response => {
-                if (response.status === 200) {
-                    if (response.data.list.length === 0){
-                        setDataFormSelect([{
-                            key: "",
-                            value: "No hay data"
-                        }]);
-                    }else{
-                        setDataFormSelect(response.data.list.map((item) => {
-                            return {
-                                key: item.id,
-                                value: item.name
-                            }
-                        }));
-                    }
-                } else {
-                    console.log("Error");
-                }
-            })
-            .catch(err => console.log(err));
-    }
-
-
     const getWithJWTState = () => {
         setDataFormSelect([]);
         getWithJWT(stateRouter, sessionStorage.getItem('token'))
@@ -105,6 +72,7 @@ const Control = () => {
                             value: item.name
                         }
                     }));
+                    setForm({ ...form, typeSearch: "idState", textSearch: response.data[0].id.toString() });
                 } else {
                     console.log("Error");
                 }
@@ -114,6 +82,7 @@ const Control = () => {
 
     const getWithJWTWithParams = (formPage) => {
         setLoading(true);
+        console.log("form: ", form);
         let routerWithParams = controlRouter + "?page=" + formPage + "&pageSize=" + form.pageSize;
         if (form.textSearch.length > 0) routerWithParams = routerWithParams + "&typeSearch=" + form.typeSearch + "&search=" + form.textSearch;
         getWithJWT(routerWithParams, sessionStorage.getItem('token'))

@@ -2,20 +2,39 @@ import { useState, useEffect } from 'react';
 import { Form, Button } from 'react-bootstrap';
 import DynamicTable from '../../../parcials/DynamicTable';
 import ModalSearchVehicle from './ModalSearchVehicle';
+import Loading from '../../../Loading';
+import { defaultPageSize } from '../../../../service/tools';
+import EmptyAnswer from '../../../EmptyAnswer';
+import PaginationTables from '../../../parcials/PaginationTables';
+import { getWithJWT } from '../../../../service/methodAPI';
 
 const Search = () => {
-    const [dataPerson, setdataPerson] = useState({ name: "Abraham Sarabia Sereno", identification: 1234567890 });
+    const [data, setData] = useState([]);
+    const [form, setForm] = useState({
+        page: 1,
+        pageSize: defaultPageSize,
+        typeSearch: "idVehicle",
+        textSearch: undefined
+    });
     const [placa, setPlaca] = useState("Buscar");
-    const [vehicle, setVehicle] = useState({});
+    const [vehicle, setVehicle] = useState("");
     const [show, setShow] = useState(false);
-    const prueba = {
-        columns: ["Fecha", "Placa", "Registro"],
-        rows: [
-            ["fecha 1", " Placa 1", "Regitro 1"],
-            ["fecha 2", " Placa 2", "Regitro 2"],
-            ["fecha 3", " Placa 3", "Regitro 3"]
-        ]
-    }
+    const [loading, setLoading] = useState(false);
+    const tableStructure = {
+        thead: ["Fecha", "Estado", "Placa", "Serial", "tipo de vehiculo"],
+        tbody: ["date", ["state", "name"], ["vehicle", "licensePlate"], ["vehicle", "serial"], ["vehicle", "typeVehicle", "name"]]
+    };
+
+    const controlRouter = process.env.REACT_APP_BACK_END_CONTROL_PATH;
+
+    useEffect(() => {
+        getWithJWTWithParams();
+    }, [form.page, form.pageSize, form.textSearch]);
+
+    const handleChange = (event) => {
+        const { name, value } = event.target;
+        name === "pageSize" ? setForm({ ...form, [name]: value, page: 1 }) : setForm({ ...form, [name]: value });
+    };
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
@@ -23,22 +42,39 @@ const Search = () => {
     const getVehicle = (item) => {
         setVehicle(item);
         setPlaca(item?.licensePlate);
+        setForm({ ...form, textSearch: item?.id });
     }
 
-    const getControlFromIdVehicle = () =>{
-        
+    const getWithJWTWithParams = () => {
+        setLoading(true);
+        let routerWithParams = controlRouter + "?page=" + form.page + "&pageSize=" + form.pageSize;
+        if (form.textSearch) routerWithParams = routerWithParams + "&typeSearch=" + form.typeSearch + "&search=" + form.textSearch;
+        let sessionToken = sessionStorage.getItem('token');
+        if (sessionToken === null) sessionToken = "Bearer " + (new URLSearchParams(window.location.search).get('access'));
+
+        getWithJWT(routerWithParams, sessionToken)
+            .then(response => {
+                setLoading(false);
+                if (response.status === 200) {
+                    let data = response.data;
+                    setData(data);
+                } else {
+                    setData({});
+                    console.log("Error");
+                }
+            })
+            .catch(err => console.log(err));
     }
 
     return (
         <>
-            <div className="row m-3">
-                <div className="col-md-4">
+            <div className="row py-4 flex-nowrap-content-center justify-content-evenly align-items-start">
+                <div className="col-md-2 p-4 border rounded">
                     <h3>Vehiculo</h3>
                     <Form>
                         <Form.Label className="ms-3">Placa:</Form.Label>
                         <Form.Group className="ms-4">
-                            <Form.Control type="text" placeholder="Buscar" className="w-auto min-vw-50 d-inline" onClick={handleShow} value={placa}/>
-                            <Button className="ms-3 align-top bg-success" onClick={handleShow}><i className="fa-solid fa-magnifying-glass"></i></Button>
+                            <Form.Control type="text" placeholder="Buscar" onClick={handleShow} value={placa} />
                         </Form.Group>
                     </Form>
                     <div className="mt-4">
@@ -55,8 +91,22 @@ const Search = () => {
 
                 </div>
 
-                <div className="col-md-8">
-                    <DynamicTable tableData={prueba} />
+                <div className="col-md-9 p-2 border rounded">
+                    <div className="d-flex justify-content-end">
+                        {data?.pages?.totalRecords > 0 ?
+                            <PaginationTables handleChange={handleChange} pages={data?.pages} formPageSize={form.pageSize} />
+                            :
+                            ""
+                        }
+                    </div>
+                    {loading ?
+                        <Loading />
+                        :
+                        data?.pages?.totalRecords === 0 ?
+                            <EmptyAnswer />
+                            :
+                            <DynamicTable tableStructure={tableStructure} data={data?.list} />
+                    }
                 </div>
             </div>
             <ModalSearchVehicle show={show} handleClose={handleClose} setVehicle={getVehicle} />

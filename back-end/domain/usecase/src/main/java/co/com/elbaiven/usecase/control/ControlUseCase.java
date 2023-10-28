@@ -54,7 +54,7 @@ public class ControlUseCase {
     private Mono<Long> getCount(String typeSearch, String search) {
         switch (typeSearch) {
             case "date":
-                return controlRepository.countFindByDate(search + '%');
+                return controlRepository.countFindByDate(search);
             case "idState":
                 return controlRepository.countFindByIdState(Long.parseLong(search));
             case "idVehicle":

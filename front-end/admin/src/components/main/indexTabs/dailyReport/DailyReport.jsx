@@ -1,4 +1,4 @@
-import { Form, Button, Card, Spinner } from 'react-bootstrap';
+import { Form, Button} from 'react-bootstrap';
 import DynamicTable from '../../../parcials/DynamicTable';
 import { getWithJWT } from '../../../../service/methodAPI';
 import { useState, useEffect } from 'react';
@@ -9,26 +9,43 @@ import PaginationTables from '../../../parcials/PaginationTables';
 
 const DailyReport = () => {
     const [data, setData] = useState([]);
-    const [countInput, setCountInput] = useState(0);
-    const [countOut, setCountOut] = useState(0);
-    const [loading, setLoading] = useState(false);
-
-    const getDataToday = () => {
-        let today = new Date();
-        let day = today.getDate();
-        let textDay= day > 10 ? day : "0" + day;
-        let month = today.getMonth() + 1;
-        let textMonth = month > 10 ? month : "0" + month;
-        let year = today.getFullYear();
-        return year + "/" + textMonth + "/" + textDay;
-    }
-
     const [form, setForm] = useState({
         page: 1,
         pageSize: defaultPageSize,
         typeSearch: "date",
-        textSearch: getDataToday()
+        textSearch: ""
     });
+    const [date, setDate] = useState({
+        from: "",
+        to: ""
+    });
+    const [countInput, setCountInput] = useState(0);
+    const [countOut, setCountOut] = useState(0);
+    const [loading, setLoading] = useState(false);
+
+    const getFormatDateTimePart = (input) => input > 9 ? input : "0" + input;
+
+    const getDataToday = () => {
+        const dateTime = new Date();
+        const dd = getFormatDateTimePart(dateTime.getDate());
+        const mm = getFormatDateTimePart(dateTime.getMonth() + 1);
+        const yyyy = dateTime.getFullYear();
+        const hh = getFormatDateTimePart(dateTime.getHours());
+        const MM = getFormatDateTimePart(dateTime.getMinutes());
+        const ss = getFormatDateTimePart(dateTime.getSeconds());
+        const dateFrom = yyyy + "-" + mm + "-" + dd + "T00:00:00";
+        const dateTo = yyyy + "-" + mm + "-" + dd + "T" + hh + ":" + MM + ":" + ss;
+        const dateFromBackend = dateFrom.replace("T", " ");
+        const dateToBackend = dateTo.replace("T", " ");
+
+        setDate({
+            from: dateFrom,
+            to: dateTo
+        })
+
+        return dateFromBackend + "_" + dateToBackend;
+    }
+
     const tableStructure = {
         thead: ["Fecha", "Placa", "Usuario", "Registro"],
         tbody: ["date", ["vehicle", "licensePlate"], ["vehicle", "user", "person", "name"], ["state", "name"]]
@@ -41,34 +58,50 @@ const DailyReport = () => {
         name === "pageSize" ? setForm({ ...form, [name]: value, page: 1 }) : setForm({ ...form, [name]: value });
     };
 
+    const handleChangeDate = (event) => {
+        const { name, value } = event.target;
+        console.log(name, value);
+        setDate({ ...date, [name]: value });
+    };
+
     useEffect(() => {
-        getWithJWTWithParams(form.page);
+        buttonSearchDataToday();
     }, [form.page, form.pageSize]);
 
     const buttonSearchDataToday = () => {
+        const valueTextSearch = getDataToday();
+        getWithJWTWithParams({ ...form, textSearch: valueTextSearch });
         handleChange({
             target: {
                 name: "textSearch",
-                value: getDataToday()
+                value: valueTextSearch
             }
         });
     }
 
     const buttonSearch = () => {
-        getWithJWTWithParams(1);
+        let dateFromBackend = date.from.replace("T", " ");
+        let dateToBackend = date.to.replace("T", " ");
+        dateFromBackend = dateFromBackend.length === 19 ? dateFromBackend :  dateFromBackend + ":00";
+        dateToBackend = dateToBackend.length === 19 ? dateToBackend :  dateToBackend + ":00";
+        const valueTextSearch = dateFromBackend + "_" + dateToBackend;
+        getWithJWTWithParams({ ...form, textSearch: valueTextSearch });
         handleChange({
             target: {
-                name: "page",
-                value: 1
+                name: "textSearch",
+                value: valueTextSearch
             }
         });
     }
 
-    const getWithJWTWithParams = (formPage) => {
+    const getWithJWTWithParams = (form) => {
         setLoading(true);
-        let routerWithParams = controlRouter + "?page=" + formPage + "&pageSize=" + form.pageSize;
+        let routerWithParams = controlRouter + "?page=" + form.page + "&pageSize=" + form.pageSize;
         if (form.textSearch.length > 0) routerWithParams = routerWithParams + "&typeSearch=" + form.typeSearch + "&search=" + form.textSearch;
-        getWithJWT(routerWithParams, sessionStorage.getItem('token'))
+        let sessionToken = sessionStorage.getItem('token');
+        if (sessionToken === null) sessionToken = "Bearer " + (new URLSearchParams(window.location.search).get('access'));
+
+        getWithJWT(routerWithParams, sessionToken)
             .then(response => {
                 setLoading(false);
                 if (response.status === 200) {
@@ -77,6 +110,9 @@ const DailyReport = () => {
                     setCountInput(getCountStateFromData(data.list, stateNameIn));
                     setCountOut(getCountStateFromData(data.list, stateNameOut));
                 } else {
+                    setData({});
+                    setCountInput(0);
+                    setCountOut(0);
                     console.log("Error");
                 }
             })
@@ -88,10 +124,10 @@ const DailyReport = () => {
     }
 
     return (
-        <div className="row m-3 flex-nowrap-content-center justify-content-evenly align-items-start">
-            <div className="col-md-4 m-3 p-3 border rounded">
-                <Form>
-                    <div className="py-2 d-flex justify-content-between align-items-start">
+        <div className="row py-4 flex-nowrap-content-center justify-content-evenly align-items-start">
+            <div className="col-md-2 p-2 border rounded">
+                <Form className='p-2 mt-2'>
+                    <div className="d-flex justify-content-between align-items-start">
                         <Form.Label><h5>Fecha:</h5></Form.Label>
                         {data?.pages?.totalRecords > 0 ?
                             <PaginationTables handleChange={handleChange} pages={data?.pages} formPageSize={form.pageSize} />
@@ -99,21 +135,26 @@ const DailyReport = () => {
                             ""
                         }
                     </div>
-                    <Form.Group className="ms-4 d-flex">
-                        <div className="border rounded p-1">
-                            <input type="text" name="textSearch" className="inputTypeTextRepresentDate" onChange={handleChange} value={form.textSearch} />
-                            <input type="datetime-local" className="inputTypeDate" />
-                        </div>
+                    <Form.Group className="mb-3 mx-1">
+                        <Form.Label>Desde</Form.Label>
+                        <Form.Control type="datetime-local" className="ms-1" name="from" onChange={handleChangeDate} value={date.from} />
+                    </Form.Group>
+                    <Form.Group className="mb-3 mx-1">
+                        <Form.Label>Hasta</Form.Label>
+                        <Form.Control type="datetime-local" className="ms-1" name="to" onChange={handleChangeDate} value={date.to} />
+                    </Form.Group>
+                    <Form.Group className="m-4 d-flex justify-content-center">
                         <Button className="ms-3 align-top bg-success" onClick={() => buttonSearch()}><i className="fa-solid fa-magnifying-glass"></i></Button>
                         <Button className="ms-3 align-top bg-success" onClick={() => buttonSearchDataToday()}><i class="fa-solid fa-rotate-left"></i></Button>
                     </Form.Group>
+
                 </Form>
-                <div className="mt-3 d-flex justify-content-evenly">
-                    <div className="p-4 text-center">
+                <div className="d-flex justify-content-evenly">
+                    <div className="p-2 text-center">
                         <h3 className="text-success">{countInput}</h3>
                         <h5>Entradas</h5>
                     </div>
-                    <div className="p-4 text-center">
+                    <div className="p-2 text-center">
                         <h3 className="text-success">{countOut}</h3>
                         <h5>Salidas</h5>
                     </div>
@@ -121,7 +162,7 @@ const DailyReport = () => {
 
             </div>
 
-            <div className="col-md-7 m-3 px-3 border rounded">
+            <div className="col-md-9 p-2 border rounded">
                 {loading ?
                     <Loading />
                     :

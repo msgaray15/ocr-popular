@@ -6,13 +6,8 @@ import co.com.elbaiven.control.repository.ControlReactiveRepository;
 import co.com.elbaiven.model.control.Control;
 import co.com.elbaiven.model.control.ControlComplete;
 import co.com.elbaiven.model.control.gateways.ControlRepository;
-import co.com.elbaiven.model.person.Person;
-import co.com.elbaiven.model.rol.Rol;
-import co.com.elbaiven.model.rol.gateways.RolRepository;
 import co.com.elbaiven.model.state.State;
 import co.com.elbaiven.model.vehicle.VehicleComplete;
-import co.com.elbaiven.rol.model.RolModel;
-import co.com.elbaiven.rol.repository.RolReactiveRepository;
 import co.com.elbaiven.state.service.StateAdapterImpl;
 import co.com.elbaiven.vehicle.service.VehicleAdapterImpl;
 import lombok.RequiredArgsConstructor;
@@ -20,16 +15,20 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
 @Service
 @RequiredArgsConstructor
 public class ControlAdapterImpl implements ControlRepository {
     private final ControlReactiveRepository controlReactiveRepository;
-    private  final StateAdapterImpl stateAdapterImpl;
-    private  final VehicleAdapterImpl vehicleAdapterImpl;
+    private final StateAdapterImpl stateAdapterImpl;
+    private final VehicleAdapterImpl vehicleAdapterImpl;
 
     public Mono<Control> create(Control control) {
         return controlReactiveRepository.save(toControlModel(control))
-                .map((e) -> toControl(e))
+                .map(ControlAdapterImpl::toControl)
                 .doOnError(err -> {
                     throw new ErrorException("400", err.getMessage());
                 });
@@ -37,7 +36,7 @@ public class ControlAdapterImpl implements ControlRepository {
 
     public Mono<Control> read(Long id) {
         return controlReactiveRepository.findById(id)
-                .map((e) -> toControl(e))
+                .map(ControlAdapterImpl::toControl)
                 .switchIfEmpty(Mono.defer(() -> {
                                     throw new ErrorException("404", "Control no encontrado");
                                 }
@@ -48,7 +47,7 @@ public class ControlAdapterImpl implements ControlRepository {
     public Mono<Control> update(Long id, Control control) {
         control.setId(id);
         return controlReactiveRepository.save(toControlModel(control))
-                .map((e) -> toControl(e))
+                .map(ControlAdapterImpl::toControl)
                 .doOnError(err -> {
                     throw new ErrorException("400", err.getMessage());
                 });
@@ -79,7 +78,17 @@ public class ControlAdapterImpl implements ControlRepository {
     }
 
     public Mono<Long> countFindByDate(String date) {
-        return controlReactiveRepository.countFindByDate(date);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        Timestamp dateStart, dateEnd;
+
+        try {
+            dateStart = new java.sql.Timestamp(dateFormat.parse(date.split("_")[0]).getTime());
+            dateEnd = new java.sql.Timestamp(dateFormat.parse(date.split("_")[1]).getTime());
+            return controlReactiveRepository.countFindByDate(dateStart, dateEnd);
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
     public Mono<Long> countFindByIdState(Long idState) {
@@ -90,10 +99,11 @@ public class ControlAdapterImpl implements ControlRepository {
         return controlReactiveRepository.countFindByIdVehicle(idVehicle);
     }
 
-    private static ControlComplete getControlComplete(ControlModel controlModel, State state, VehicleComplete vehicleComplete){
+    private static ControlComplete getControlComplete(ControlModel controlModel, State state, VehicleComplete vehicleComplete) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         return ControlComplete.builder()
                 .id(controlModel.getId())
-                .date(controlModel.getDate())
+                .date(dateFormat.format(controlModel.getDate()))
                 .state(state)
                 .vehicle(vehicleComplete)
                 .build();
@@ -102,35 +112,46 @@ public class ControlAdapterImpl implements ControlRepository {
     public Flux<ControlModel> getListControlByTypeSearch(Integer page, Integer pageSize, String typeSearch, String search) {
         switch (typeSearch) {
             case "date":
-                String dateStart, dateEnd;
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                Timestamp dateStart, dateEnd;
 
-                dateStart = search.split("-")[0]; //20230701 00:00:00-20230830 23:59:59 -> 20230701 00:00:00
-                dateEnd = search.split("-")[1]; //20230701 00:00:00-20230830 23:59:59 -> 20230830 23:59:59
-                return controlReactiveRepository.findByDate(dateStart,dateEnd, pageSize, page*pageSize);
+                try {
+                    dateStart = new java.sql.Timestamp(dateFormat.parse(search.split("_")[0]).getTime());
+                    dateEnd = new java.sql.Timestamp(dateFormat.parse(search.split("_")[1]).getTime());
+                    return controlReactiveRepository.findByDate(dateStart, dateEnd, pageSize, page * pageSize);
+                } catch (ParseException e) {
+                    throw new RuntimeException(e);
+                }
             case "idState":
-                return controlReactiveRepository.findByIdState(Long.parseLong(search), pageSize, page*pageSize);
+                return controlReactiveRepository.findByIdState(Long.parseLong(search), pageSize, page * pageSize);
             case "idVehicle":
-                return controlReactiveRepository.findByIdVehicle(Long.parseLong(search), pageSize, page*pageSize);
+                return controlReactiveRepository.findByIdVehicle(Long.parseLong(search), pageSize, page * pageSize);
             default:
-                return controlReactiveRepository.findAll(pageSize, page*pageSize);
+                return controlReactiveRepository.findAll(pageSize, page * pageSize);
         }
     }
 
     public static ControlModel toControlModel(Control control) {
-        return ControlModel.builder()
-                .id(control.getId())
-                .date(control.getDate())
-                .idState(control.getIdState())
-                .idVehicle(control.getIdVehicle())
-                .build();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        try {
+            return ControlModel.builder()
+                    .id(control.getId())
+                    .date(new java.sql.Timestamp(dateFormat.parse(control.getDate()).getTime()))
+                    .idState(control.getIdState())
+                    .idVehicle(control.getIdVehicle())
+                    .build();
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static Control toControl(ControlModel controlModel) {
-        return  Control.builder()
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        return Control.builder()
                 .id(controlModel.getId())
                 .idVehicle(controlModel.getIdVehicle())
                 .idState(controlModel.getIdState())
-                .date(controlModel.getDate())
+                .date(dateFormat.format(controlModel.getDate()))
                 .build();
     }
 }

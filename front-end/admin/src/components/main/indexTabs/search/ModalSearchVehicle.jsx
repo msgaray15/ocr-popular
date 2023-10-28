@@ -24,7 +24,9 @@ const ModalSearchVehicle = ({ show, handleClose, setVehicle }) => {
         setLoading(true);
         let routerWithParams = vehicleRouter + "?page=" + form.page + "&pageSize=" + form.pageSize;
         if (form.textSearch.length > 0) routerWithParams = routerWithParams + "&typeSearch=" + form.typeSearch + "&search=" + form.textSearch;
-        getWithJWT(routerWithParams, sessionStorage.getItem('token'))
+        let sessionToken = sessionStorage.getItem('token');
+        if (sessionToken === null) sessionToken = "Bearer " + (new URLSearchParams(window.location.search).get('access'));
+        getWithJWT(routerWithParams, sessionToken)
             .then(response => {
                 setLoading(false);
                 if (response.status === 200) {

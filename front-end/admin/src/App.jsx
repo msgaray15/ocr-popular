@@ -34,7 +34,7 @@ function App() {
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const access = urlParams.get('access');
-    access !== null ? sessionStorage.setItem("token", "Bearer " + urlParams.get('access')) : window.location.href = regirectToLogin;
+    access !== null ? sessionStorage.setItem("token", "Bearer " + access) : window.location.href = regirectToLogin;
     const getDataUser = jwtToDataUser();
     getDataUser !== null && getDataUser?.rol?.name === nameRolAdministrador ? setDataUser(getDataUser) : window.location.href = regirectToLogin;
   }, []);

@@ -6,14 +6,16 @@ import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.sql.Timestamp;
+
 // TODO: This file is just an example, you should delete or modify it
 public interface ControlReactiveRepository extends ReactiveCrudRepository<ControlModel, Long> {
 
     @Query(value = "SELECT * FROM controls c  WHERE c.date BETWEEN :dateStart AND :dateEnd LIMIT :pageSize OFFSET :page")
-    Flux<ControlModel> findByDate(String dateStart, String dateEnd, Integer pageSize, Integer page);
+    Flux<ControlModel> findByDate(Timestamp dateStart, Timestamp dateEnd, Integer pageSize, Integer page);
 
-    @Query(value = "SELECT COUNT(*) FROM controls c  WHERE c.date LIKE :date")
-    Mono<Long> countFindByDate(String date);
+    @Query(value = "SELECT COUNT(*) FROM controls c  WHERE c.date BETWEEN :dateStart AND :dateEnd")
+    Mono<Long> countFindByDate(Timestamp dateStart, Timestamp dateEnd);
 
     @Query(value = "SELECT * FROM controls LIMIT :pageSize OFFSET :page")
     Flux<ControlModel> findAll(Integer pageSize, Integer page);

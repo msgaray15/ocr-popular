@@ -5,7 +5,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
 
 @Data
 @Builder(toBuilder = true)
@@ -15,7 +15,7 @@ public class ControlModel {
     @Column("id")
     private Long id;
     @Column("date")
-    private String date;
+    private Timestamp date;
     @Column("id_state")
     private Long idState;
     @Column("id_vehicle")
