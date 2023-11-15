@@ -43,6 +43,21 @@ public class ControlController {
                 .map(ResponseAPI::getResponseAPI);
     }
 
+    @GetMapping("/control-vigilante")
+    public Mono<String> getControlVigilante(@RequestHeader HttpHeaders httpHeaders) {
+        String clientId, clientSecret;
+        clientId = httpHeaders.getFirst("client-id");
+        clientSecret = httpHeaders.getFirst("client-secret");
+
+        if (clientId == null || clientSecret == null)
+            return Mono.error(new ErrorException("400", "El cliend-id  y client-secret Son obligatorios"));
+        if (!clientId.equals(recognition.getClientId()) || !clientSecret.equals(recognition.getClientSecret()))
+            return Mono.error(new ErrorException("400", "El cliend-id  y client-secret Son Incorrectas"));
+
+        loggerMessage.loggerInfo("read Control - Vigilante: ");
+        return controlUseCase.getControlVigilante();
+    }
+
     @PostMapping()
     public Mono<ResponseAPI> create(@RequestBody Register register, @RequestHeader HttpHeaders httpHeaders) {
         String clientId, clientSecret;

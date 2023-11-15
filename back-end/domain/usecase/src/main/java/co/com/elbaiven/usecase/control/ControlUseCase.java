@@ -9,6 +9,7 @@ import co.com.elbaiven.model.utils.GenericDatetimeFormatter;
 import co.com.elbaiven.model.utils.ModelListCompleteWithPages;
 import co.com.elbaiven.model.vehicle.Vehicle;
 import co.com.elbaiven.model.vehicle.gateways.VehicleRepository;
+import co.com.elbaiven.usecase.control.util.ControlVigilante;
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Mono;
 
@@ -23,14 +24,30 @@ public class ControlUseCase {
     private final GenericDatetimeFormatter genericDatetimeFormatter;
 
     public Mono<Control> create(String placa, String state) {
+        setControlVigilante(genericDatetimeFormatter.getDatetime(), ControlVigilante.DANGER, placa, state);
         Mono<State> stateMono = stateRepository.getName(state);
         Mono<Vehicle> vehicleMono = vehicleRepository.getLicensePlate(placa);
         return Mono.zip(vehicleMono, stateMono)
-                .flatMap(tupla -> controlRepository.create(getControl(tupla.getT1().getId(),tupla.getT2().getId())));
+                .flatMap(tuple -> controlRepository.create(getControl(tuple.getT1().getId(), tuple.getT2().getId())))
+                .flatMap(control -> {
+                    setControlVigilante(control.getDate(), ControlVigilante.SUCCESS, placa, state);
+                    return Mono.just(control);
+                });
+    }
+
+    public void setControlVigilante(String date, String key, String placa, String state) {
+        ControlVigilante.key = key;
+        ControlVigilante.state = state;
+        ControlVigilante.placa = placa;
+        ControlVigilante.date = date;
     }
 
     public Mono<Control> read(Long id) {
         return controlRepository.read(id);
+    }
+
+    public Mono<String> getControlVigilante() {
+        return Mono.just(ControlVigilante.toString);
     }
 
     public Mono<Control> update(Long id, Control control) {

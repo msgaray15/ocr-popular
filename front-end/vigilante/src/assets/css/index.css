@@ -26,3 +26,8 @@ a {
 .tbody-select:hover{
   background-color: #198754;
 }
+
+.semaforo{
+  width: 30px;
+  height: 30px;
+}
