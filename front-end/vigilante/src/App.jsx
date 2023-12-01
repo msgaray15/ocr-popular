@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
-import Index from './components/main/Index';
 import NotFound from './components/NotFound';
 import { jwtToDataUser } from './service/tools';
 import TopBar from './components/parcials/TopBar';
+import VideoFeed from './components/main/VideoFeed';
+import VideoJS from './components/main/VideoJS';
+import Index from './components/main/Index';
 
 
 

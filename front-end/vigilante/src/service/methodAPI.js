@@ -24,7 +24,14 @@ export const getWithJWT = async (route, jwt) => {
 }
 
 export const get = async (route) => {
-    const response = await fetch(BASE_URL + route);
+    const response = await fetch(BASE_URL + route,{
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'client-id': 'prueba',
+            'client-secret': 'prueba'
+        },
+    });
     let data = await response.json();
     response.status === 200 ? data = data.data : data = data.error;
     return {

@@ -40,6 +40,7 @@
     ]
   },
   "devDependencies": {
-    "@types/bootstrap": "^5.2.6"
+    "@types/bootstrap": "^5.2.6",
+    "video.js": "^8.6.1"
   }
 }

@@ -44,7 +44,7 @@ public class ControlController {
     }
 
     @GetMapping("/control-vigilante")
-    public Mono<String> getControlVigilante(@RequestHeader HttpHeaders httpHeaders) {
+    public Mono<ResponseAPI> getControlVigilante(@RequestHeader HttpHeaders httpHeaders) {
         String clientId, clientSecret;
         clientId = httpHeaders.getFirst("client-id");
         clientSecret = httpHeaders.getFirst("client-secret");
@@ -55,7 +55,8 @@ public class ControlController {
             return Mono.error(new ErrorException("400", "El cliend-id  y client-secret Son Incorrectas"));
 
         loggerMessage.loggerInfo("read Control - Vigilante: ");
-        return controlUseCase.getControlVigilante();
+        return controlUseCase.getControlVigilante()
+                .map(ResponseAPI::getResponseAPI);
     }
 
     @PostMapping()

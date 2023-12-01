@@ -1,10 +1,13 @@
-FROM jjanzic/docker-python3-opencv 
+FROM python
 WORKDIR /usr/src/app
 # Copiar el archivo.py que queremos ejecutar a la imagen.
-COPY proyect.py /usr/src/app
-COPY config.json /usr/src/app
+COPY ./clientRecognition/proyect.py /usr/src/app
+COPY ./clientRecognition/config.json /usr/src/app
 #Correr dependecias
+RUN apt-get update && apt-get install -y libglib2.0-0 libgl1-mesa-glx && rm -rf /var/lib/apt/lists/*
 RUN pip install --upgrade pip
+RUN pip install opencv-python
+RUN apt-get update && apt-get -y install tesseract-ocr
 RUN pip install pytesseract
 RUN pip install requests
 # Ejecutar el archivo al iniciar la imagen en un contenedor.

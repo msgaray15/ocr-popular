@@ -2,6 +2,7 @@ package co.com.elbaiven.model.control.gateways;
 
 import co.com.elbaiven.model.control.Control;
 import co.com.elbaiven.model.control.ControlComplete;
+import co.com.elbaiven.model.control.ControlVigilante;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -15,4 +16,6 @@ public interface ControlRepository {
     Mono<Long> countFindByDate(String date);
     Mono<Long> countFindByIdState(Long idState);
     Mono<Long> countFindByIdVehicle(Long idVehicle);
+    Mono<ControlVigilante> updateControlVigilante(ControlVigilante controlVigilante);
+    Mono<ControlVigilante> getControlVigilanteMono();
 }

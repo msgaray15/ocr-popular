@@ -1,7 +1,7 @@
 version: '3.9'
 services:
   postgres:
-    image: postgres
+    image: postgres:15
     container_name: postgres_recognition
     volumes:
       - ./BD_vehicle_recognition.sql :/docker-entrypoint-initdb.d/BD_vehicle_recognition.sql     
@@ -9,6 +9,35 @@ services:
     environment:
       - POSTGRES_DB=vehicle_recognition
       - POSTGRES_PASSWORD=postgres
-      - POSTGRES_USER=postgres
-    ports:
-      - 5432:5432
+      - POSTGRES_USER=postgres_recognition
+    network_mode: host
+
+  backend:
+    container_name: back_end
+    build:
+      dockerfile: ./back-end/deployment/DockerFile
+    network_mode: host
+
+  recognition:
+    container_name: client_recognition
+    build:
+      dockerfile: ./clientRecognition/DockerFile
+    network_mode: host
+
+  login:
+    container_name: front_end_login
+    build:
+      dockerfile: ./front-end/login/DockerFile
+    network_mode: host
+
+  admin:
+    container_name: front_end_admin
+    build:
+      dockerfile: ./front-end/admin/DockerFile
+    network_mode: host
+
+  vigilante:
+    container_name: front_end_vigilante
+    build:
+      dockerfile: ./front-end/vigilante/DockerFile
+    network_mode: host

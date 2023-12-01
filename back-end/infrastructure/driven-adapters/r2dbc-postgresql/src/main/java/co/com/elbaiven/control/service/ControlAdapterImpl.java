@@ -2,9 +2,12 @@ package co.com.elbaiven.control.service;
 
 import co.com.elbaiven.api.exception.util.ErrorException;
 import co.com.elbaiven.control.model.ControlModel;
+import co.com.elbaiven.control.model.ControlVigilateModel;
 import co.com.elbaiven.control.repository.ControlReactiveRepository;
+import co.com.elbaiven.control.repository.ControlVigilanteReactiveRepository;
 import co.com.elbaiven.model.control.Control;
 import co.com.elbaiven.model.control.ControlComplete;
+import co.com.elbaiven.model.control.ControlVigilante;
 import co.com.elbaiven.model.control.gateways.ControlRepository;
 import co.com.elbaiven.model.state.State;
 import co.com.elbaiven.model.vehicle.VehicleComplete;
@@ -14,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
 import java.sql.Timestamp;
 import java.text.ParseException;
@@ -23,6 +27,7 @@ import java.text.SimpleDateFormat;
 @RequiredArgsConstructor
 public class ControlAdapterImpl implements ControlRepository {
     private final ControlReactiveRepository controlReactiveRepository;
+    private final ControlVigilanteReactiveRepository controlVigilanteReactiveRepository;
     private final StateAdapterImpl stateAdapterImpl;
     private final VehicleAdapterImpl vehicleAdapterImpl;
 
@@ -99,6 +104,21 @@ public class ControlAdapterImpl implements ControlRepository {
         return controlReactiveRepository.countFindByIdVehicle(idVehicle);
     }
 
+    public Mono<ControlVigilante> updateControlVigilante(ControlVigilante controlVigilante) {
+        return controlVigilanteReactiveRepository.save(toControlVigilateModel(controlVigilante))
+                .map(ControlAdapterImpl::toControlVigilante);
+    }
+
+    public Mono<ControlVigilante> getControlVigilanteMono() {
+        return controlVigilanteReactiveRepository.findById(1)
+                .map(ControlAdapterImpl::toControlVigilante)
+                .switchIfEmpty(Mono.defer(() -> {
+                                    throw new ErrorException("404", "Control-Vigilante no encontrado");
+                                }
+                        )
+                );
+    }
+
     private static ControlComplete getControlComplete(ControlModel controlModel, State state, VehicleComplete vehicleComplete) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         return ControlComplete.builder()
@@ -152,6 +172,25 @@ public class ControlAdapterImpl implements ControlRepository {
                 .idVehicle(controlModel.getIdVehicle())
                 .idState(controlModel.getIdState())
                 .date(dateFormat.format(controlModel.getDate()))
+                .build();
+    }
+
+    private static ControlVigilateModel toControlVigilateModel(ControlVigilante controlVigilante) {
+        return ControlVigilateModel.builder()
+                .id(1)
+                .key(controlVigilante.getKey())
+                .date(controlVigilante.getDate())
+                .placa(controlVigilante.getPlaca())
+                .state(controlVigilante.getState())
+                .build();
+    }
+
+    private static ControlVigilante toControlVigilante(ControlVigilateModel controlVigilateModel) {
+        return ControlVigilante.builder()
+                .key(controlVigilateModel.getKey())
+                .date(controlVigilateModel.getDate())
+                .placa(controlVigilateModel.getPlaca())
+                .state(controlVigilateModel.getState())
                 .build();
     }
 }
